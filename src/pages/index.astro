@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/Navbar.astro";
+import HeroSection from "@/sections/HeroSection";
+const currentPath = Astro.url.pathname;
+---
+
+<Layout title="Home | Portfolio Online">
+  <Navbar currentPath={currentPath} />
+  <HeroSection client:load />
+</Layout>
