@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import GoogleIcon from "./icons/GoogleIcon";
-import { app, auth } from "@/config/FirebaseConfig";
+import { app } from "@/config/FirebaseConfig";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
 
 export default function LoginModal() {
