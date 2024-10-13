@@ -11,8 +11,8 @@ export default function HeroSection() {
               src="https://res.cloudinary.com/dszhlpm81/image/upload/v1723633487/assets/UFPMOvuUtfuMxUpG2yy%2BnF743hBOeLEzqjNEDiHixcQ%3D/foto_tyc5yi.jpg"
               alt="Foto Profil"
               className="object-cover fill-inherit rounded-full"
-              fetchPriority="high"
               loading="lazy"
+              fetchPriority="high"
             />
           </div>
           <div className="space-y-2">

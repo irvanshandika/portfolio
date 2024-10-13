@@ -1,0 +1,35 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+const { status = 404 } = Astro.props;
+
+let title;
+let message;
+
+switch (status) {
+  case 404:
+    title = "404 Not Found";
+    message = "Halaman yang Anda cari tidak ditemukan.";
+    break;
+  case 500:
+    title = "500 Internal Server Error";
+    message = "Terjadi kesalahan di server. Silakan coba lagi nanti.";
+    break;
+  case 403:
+    title = "403 Forbidden";
+    message = "Anda tidak memiliki izin untuk mengakses halaman ini.";
+    break;
+  default:
+    title = "Error";
+    message = "Terjadi kesalahan tidak diketahui.";
+}
+---
+
+<Layout title=`${title} | Portfolio Online`>
+  <div class="text-center">
+    <h1 class="text-6xl font-bold text-red-600">{status}</h1>
+    <h2 class="text-4xl mt-4">{title}</h2>
+    <p class="mt-2 text-lg text-gray-700">{message}</p>
+    <a href="/" class="mt-6 inline-block px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Kembali ke Beranda</a>
+  </div>
+</Layout>

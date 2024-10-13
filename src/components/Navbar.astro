@@ -1,6 +1,6 @@
 ---
 import { ModeToggle } from "./ModeToggle";
-import DropdownContent from "./DropdownMenu";
+import LoginModal from "./LoginModal";
 const { currentPath } = Astro.props;
 
 const navItems = [
@@ -44,7 +44,7 @@ const isActive = (path: string) => currentPath === path;
         >
         <span class="sr-only">Toggle</span>
       </button>
-      <DropdownContent client:load />
+      <LoginModal client:load />
     </div>
     <div id="hs-navbar-alignment" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2" aria-labelledby="hs-navbar-alignment-collapse">
       <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
