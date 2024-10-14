@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/Navbar.astro";
 import ErrorPage from "@/sections/ErrorPage";
+import Footer from "@/components/Footer";
 
 const { status = 404 } = Astro.props;
 
@@ -28,6 +29,7 @@ switch (status) {
 ---
 
 <Layout title={`${title} | Portfolio Online`}>
-  <Navbar />
+  <Navbar client:load />
   <ErrorPage client:load status={status} title={title} message={message} />
+  <Footer client:load />
 </Layout>
