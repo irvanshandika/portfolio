@@ -53,12 +53,12 @@ export default function ContactForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Formulir Kontak</CardTitle>
+        <CardTitle>Contact</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleContactSubmit} className="space-y-4">
           <div>
-            <Label htmlFor="name">Nama</Label>
+            <Label htmlFor="name">Name</Label>
             {user ? (
               <div className="flex items-center space-x-2">
                 <Avatar>
@@ -76,7 +76,7 @@ export default function ContactForm() {
             <Input id="email" name="email" type="email" placeholder="Masukkan email Anda" required defaultValue={user?.email || ""} disabled={!!user} />
           </div>
           <div>
-            <Label htmlFor="message">Pesan</Label>
+            <Label htmlFor="message">Message</Label>
             {isClient && (
               <React.Suspense fallback={<div>Loading editor...</div>}>
                 <ReactQuill theme="snow" value={contactMessage} onChange={setContactMessage} className="h-36 lg:mb-12 mb-20" placeholder="Tulis pesan Anda di sini" />
@@ -85,7 +85,7 @@ export default function ContactForm() {
           </div>
           {user ? (
             <Button type="submit">
-              <Send className="mr-2 h-4 w-4" /> Kirim Pesan
+              <Send className="mr-2 h-4 w-4" /> Send Message
             </Button>
           ) : (
             <LoginModal />

@@ -44,7 +44,7 @@ export default function CommentList() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Komentar Terbaru</CardTitle>
+        <CardTitle>Recent Comments</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4 max-h-[400px] overflow-y-auto">

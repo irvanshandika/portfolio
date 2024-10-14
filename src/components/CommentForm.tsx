@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,25 +7,36 @@ import { MessageSquare } from "lucide-react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import toast from "react-hot-toast";
-import { useAuth } from "@/lib/useAuth"; // Pastikan path ini benar
+import { useAuth } from "@/lib/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoginModal from "./LoginModal";
+import Turnstile from "react-turnstile";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
 
 export default function CommentForm() {
   const [commentMessage, setCommentMessage] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const { user, signInWithGoogle } = useAuth();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
   const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!user) {
       toast.error("Silakan login terlebih dahulu.");
+      return;
+    }
+
+    if (!turnstileToken) {
+      toast.error("Silakan selesaikan verifikasi Turnstile.");
       return;
     }
 
@@ -39,6 +50,7 @@ export default function CommentForm() {
       });
       toast.success("Komentar telah dikirim!");
       setCommentMessage("");
+      setTurnstileToken(null); // Reset token setelah submit
     } catch (error) {
       console.error("Error adding document: ", error);
       toast.error("Gagal mengirim komentar. Silakan coba lagi.");
@@ -48,7 +60,7 @@ export default function CommentForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tinggalkan Komentar</CardTitle>
+        <CardTitle>Comment</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleCommentSubmit} className="space-y-4">
@@ -67,7 +79,7 @@ export default function CommentForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="comment-message">Komentar</Label>
+            <Label htmlFor="comment-message">Comment</Label>
             {isClient && (
               <React.Suspense fallback={<div>Loading editor...</div>}>
                 <ReactQuill theme="snow" value={commentMessage} onChange={setCommentMessage} className="h-36 lg:mb-12 mb-20" placeholder="Tulis komentar Anda di sini" />
@@ -75,9 +87,14 @@ export default function CommentForm() {
             )}
           </div>
           {user ? (
-            <Button type="submit">
-              <MessageSquare className="mr-2 h-4 w-4" /> Kirim Komentar
-            </Button>
+            <>
+              <div className="pt-4">
+                <Turnstile sitekey={`${import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}`} onVerify={handleTurnstileVerify} />
+                <Button type="submit" disabled={!turnstileToken}>
+                  <MessageSquare className="mr-2 h-4 w-4" /> Submit
+                </Button>
+              </div>
+            </>
           ) : (
             <LoginModal />
           )}

@@ -19,17 +19,14 @@ export default function HeroSection() {
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">Muhammad Irvan Shandika</h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">Web Developer | UI/UX Designer | Promp Engineer</p>
           </div>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
-            Saya adalah seorang web developer dan UI/UX designer yang berfokus pada pembuatan aplikasi web yang efisien dan mudah digunakan. Saya memiliki pengalaman dalam mengembangkan aplikasi web dengan teknologi modern seperti React,
-            Next.js, dan Tailwind CSS.
-          </p>
+          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">I am a web developer who focuses on developing websites and web-based applications. I also have experience in UI/UX design and promp engineer.</p>
           <div className="space-x-4">
             <Button onClick={() => (window.location.href = "/projects")}>
-              Lihat Proyek
+              See My Projects
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button variant="outline" onClick={() => (window.location.href = "/contact")}>
-              Hubungi Saya
+              Contact Me
             </Button>
           </div>
         </div>
