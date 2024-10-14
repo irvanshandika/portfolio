@@ -39,7 +39,7 @@ export default function AboutPage() {
           </Card>
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Skill</h3>
+              <h3 className="text-xl font-semibold mb-4">Skills</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (
                   <Badge key={index} variant="secondary">
