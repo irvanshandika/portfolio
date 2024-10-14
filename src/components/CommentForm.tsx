@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoginModal from "./LoginModal";
 import Turnstile from "react-turnstile";
+import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
 

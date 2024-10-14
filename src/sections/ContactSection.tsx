@@ -1,4 +1,3 @@
-import React from "react";
 import "react-quill/dist/quill.snow.css";
 import CommentList from "@/components/CommentList";
 import CommentForm from "@/components/CommentForm";

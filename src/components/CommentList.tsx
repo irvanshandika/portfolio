@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { collection, query, orderBy, onSnapshot, Timestamp, limit } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";

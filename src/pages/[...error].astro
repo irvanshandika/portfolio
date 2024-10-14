@@ -29,7 +29,7 @@ switch (status) {
 ---
 
 <Layout title={`${title} | Portfolio Online`}>
-  <Navbar client:load />
+  <Navbar />
   <ErrorPage client:load status={status} title={title} message={message} />
   <Footer client:load />
 </Layout>

@@ -11,6 +11,7 @@ import { useAuth } from "@/lib/useAuth"; // Pastikan path ini benar
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoginModal from "./LoginModal";
 import Turnstile from "react-turnstile";
+import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
 
@@ -32,6 +33,11 @@ export default function ContactForm() {
     event.preventDefault();
     if (!user) {
       toast.error("Silakan login terlebih dahulu.");
+      return;
+    }
+
+    if (!turnstileToken) {
+      toast.error("Silakan selesaikan verifikasi Turnstile.");
       return;
     }
 
