@@ -18,7 +18,7 @@ export default function CommentForm() {
   const [commentMessage, setCommentMessage] = useState("");
   const [isClient, setIsClient] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const { user, signInWithGoogle } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     setIsClient(true);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,16 +10,22 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/lib/useAuth"; // Pastikan path ini benar
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoginModal from "./LoginModal";
+import Turnstile from "react-turnstile";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
 
 export default function ContactForm() {
   const [contactMessage, setContactMessage] = useState("");
   const [isClient, setIsClient] = useState(false);
-  const { user, signInWithGoogle } = useAuth();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
   }, []);
 
   const handleContactSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -44,6 +50,7 @@ export default function ContactForm() {
       toast.success("Pesan telah dikirim!");
       form.reset();
       setContactMessage("");
+      setTurnstileToken(null);
     } catch (error) {
       console.error("Error adding document: ", error);
       toast.error("Gagal mengirim pesan. Silakan coba lagi.");
@@ -84,9 +91,12 @@ export default function ContactForm() {
             )}
           </div>
           {user ? (
-            <Button type="submit">
-              <Send className="mr-2 h-4 w-4" /> Send Message
-            </Button>
+            <div className="pt-4">
+              <Turnstile sitekey={`${import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}`} onVerify={handleTurnstileVerify} />
+              <Button type="submit">
+                <Send className="mr-2 h-4 w-4" /> Send Message
+              </Button>
+            </div>
           ) : (
             <LoginModal />
           )}
