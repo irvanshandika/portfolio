@@ -10,13 +10,6 @@ export default function LoginModal() {
   const [isOpen, setIsOpen] = React.useState(false);
   const { user, signInWithGoogle, signOut } = useAuth();
 
-  useEffect(() => {
-    if (user) {
-      console.log("User data:", user);
-      console.log("Photo URL:", user.photoURL);
-    }
-  }, [user]);
-
   const handleLogin = async () => {
     try {
       await signInWithGoogle();
