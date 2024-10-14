@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/Navbar.astro";
+import DashboardSection from "@/sections/Dashboard/DashboardSection";
+const currentPath = Astro.url.pathname;
+---
+
+<Layout title="Dashboard | Portfolio Online">
+  <Navbar currentPath={currentPath} />
+  <DashboardSection client:load />
+</Layout>

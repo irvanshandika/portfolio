@@ -8,40 +8,38 @@ export default function AboutPage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">Tentang Saya</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">About Me</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="space-y-6">
           <iframe
-            src="https://firebasestorage.googleapis.com/v0/b/irvanportfolio.appspot.com/o/Muhammad%20Irvan%20Shandika-resume.pdf?alt=media&token=311dfa29-ec7d-4bb8-bd79-04f94af2d1aa#toolbar=0"
+            src="https://firebasestorage.googleapis.com/v0/b/irvans-707d8.appspot.com/o/Muhammad%20Irvan%20Shandika-resume.pdf?alt=media&token=93fdd122-e18d-4d4d-b1c1-8817dc23df05#toolbar=0"
             frameBorder="0"
             width={400}
             height={400}
             className="rounded-lg shadow-lg mx-auto"></iframe>
           <div className="flex justify-center space-x-4">
             <Button onClick={() => (window.location.href = "/contact")}>
-              <Mail className="mr-2 h-4 w-4" /> Hubungi Saya
+              <Mail className="mr-2 h-4 w-4" /> Contact Me
             </Button>
-            <Button
-              variant="outline"
-              onClick={() => (window.location.href = "https://firebasestorage.googleapis.com/v0/b/irvanportfolio.appspot.com/o/Muhammad%20Irvan%20Shandika-resume.pdf?alt=media&token=311dfa29-ec7d-4bb8-bd79-04f94af2d1aa&export=download")}>
-              <Download className="mr-2 h-4 w-4" /> Unduh CV
+            <Button variant="outline" onClick={() => (window.location.href = "https://drive.usercontent.google.com/u/0/uc?id=1PJeD9QKvFX0tJkdY2EltRwgqPo9YsYSi&export=download")}>
+              <Download className="mr-2 h-4 w-4" /> Download CV
             </Button>
           </div>
         </div>
         <div className="space-y-6">
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-2xl font-semibold mb-4">Halo! Saya Muhammad Irvan Shandika</h2>
+              <h2 className="text-2xl font-semibold mb-4">Hi👋! I'm Muhammad Irvan Shandika</h2>
               <p className="text-muted-foreground mb-4">
-                Saya adalah seorang web developer yang bersemangat dengan pengalaman dalam menciptakan solusi web yang menarik dan fungsional. Dengan latar belakang dalam desain UI/UX dan pengembangan front-end, saya berusaha untuk
-                memadukan estetika dengan fungsionalitas dalam setiap proyek yang saya kerjakan.
+                I am a passionate web developer with experience in creating engaging and functional web solutions. With a background in UI/UX design and front-end development, I strive to blend aesthetics with functionality in every project
+                I work on.
               </p>
-              <p className="text-muted-foreground">Ketika saya tidak sedang coding, Anda bisa menemukan saya menjelajahi trails hiking baru, bereksperimen dengan resep masakan baru, atau membaca buku-buku tentang teknologi terbaru.</p>
+              <p className="text-muted-foreground">When I'm not coding, I try to find and learn new things to hone my learning skills.</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Keterampilan</h3>
+              <h3 className="text-xl font-semibold mb-4">Skill</h3>
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill, index) => (
                   <Badge key={index} variant="secondary">

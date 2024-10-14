@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 import "@/styles/global.css";
+import ToastProvider from "@/components/ToastProvider";
 ---
 
 <script is:inline>
@@ -35,6 +36,7 @@ import "@/styles/global.css";
     <title>{title}</title>
   </head>
   <body>
+    <ToastProvider />
     <slot />
     <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
     <script is:inline src="./node_modules/preline/preline.js"></script>
