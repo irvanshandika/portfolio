@@ -6,12 +6,12 @@ import { Label } from "@/components/ui/label";
 import { MessageSquare } from "lucide-react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
-import toast from "react-hot-toast";
 import { useAuth } from "@/lib/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoginModal from "./LoginModal";
 import Turnstile from "react-turnstile";
 import "react-quill/dist/quill.snow.css";
+import { Toaster, toast } from "react-hot-toast";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
 
@@ -60,6 +60,7 @@ export default function CommentForm() {
 
   return (
     <Card>
+      <Toaster position="top-right" />
       <CardHeader>
         <CardTitle>Comment</CardTitle>
       </CardHeader>

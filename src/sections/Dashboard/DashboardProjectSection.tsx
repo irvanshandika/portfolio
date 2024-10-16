@@ -8,8 +8,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, X, Upload, Github, ExternalLink, Edit, Trash } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { db, storage } from "@/config/FirebaseConfig";
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { db, storage, auth } from "@/config/FirebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -23,6 +24,33 @@ interface Project {
   githubLink: string;
   liveLink: string;
 }
+
+const useAdminCheck = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists() && userSnap.data().role === "admin") {
+          setIsAdmin(true);
+        } else {
+          window.location.href = "/";
+        }
+      } else {
+        window.location.href = "/";
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return { isAdmin, loading };
+};
 
 const ProjectDashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -40,6 +68,7 @@ const ProjectDashboard: React.FC = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [projectToDelete, setProjectToDelete] = useState<Project | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const { isAdmin, loading } = useAdminCheck();
 
   useEffect(() => {
     fetchProjects();
@@ -159,6 +188,14 @@ const ProjectDashboard: React.FC = () => {
     setImageFile(null);
     setIsEditing(false);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
