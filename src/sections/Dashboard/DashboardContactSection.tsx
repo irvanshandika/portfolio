@@ -1,30 +1,45 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowUpDown, Search } from "lucide-react";
+import { ArrowUpDown, Search, Eye, Trash2 } from "lucide-react";
+import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/config/FirebaseConfig";
+import toast from "react-hot-toast";
 
 interface Contact {
-  id: number;
+  id: string;
   name: string;
   email: string;
   message: string;
   date: string;
 }
 
-const contacts: Contact[] = [
-  { id: 1, name: "John Doe", email: "john@example.com", message: "Hello, I'd like to discuss a project.", date: "2023-06-15" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", message: "Interested in your services.", date: "2023-06-14" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", message: "Can we schedule a call?", date: "2023-06-13" },
-  { id: 4, name: "Alice Brown", email: "alice@example.com", message: "Looking for a web developer.", date: "2023-06-12" },
-  { id: 5, name: "Charlie Wilson", email: "charlie@example.com", message: "Need help with my website.", date: "2023-06-11" },
-];
-
 const ContactDashboard: React.FC = () => {
+  const [contacts, setContacts] = useState<Contact[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "date">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const fetchContacts = async () => {
+    const q = query(collection(db, "messages_db"));
+    const querySnapshot = await getDocs(q);
+    const fetchedContacts: Contact[] = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      name: doc.data().name,
+      email: doc.data().email,
+      message: doc.data().message,
+      date: doc.data().date.toDate().toISOString().split("T")[0],
+    }));
+    setContacts(fetchedContacts);
+    setLoading(false);
+  };
 
   const filteredAndSortedContacts = useMemo(() => {
     return contacts
@@ -36,11 +51,32 @@ const ContactDashboard: React.FC = () => {
           return sortOrder === "asc" ? new Date(a.date).getTime() - new Date(b.date).getTime() : new Date(b.date).getTime() - new Date(a.date).getTime();
         }
       });
-  }, [searchTerm, sortBy, sortOrder]);
+  }, [contacts, searchTerm, sortBy, sortOrder]);
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
+
+  const handleViewMessage = (id: string) => {
+    window.location.href = `/dashboard/message/${id}`;
+  };
+
+  const handleDeleteMessage = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this message?")) {
+      try {
+        await deleteDoc(doc(db, "messages_db", id));
+        toast.success("Message deleted successfully");
+        fetchContacts();
+      } catch (error) {
+        console.error("Error deleting document: ", error);
+        toast.error("Failed to delete message");
+      }
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center mt-8">Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -66,29 +102,39 @@ const ContactDashboard: React.FC = () => {
           </Button>
         </div>
       </div>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Message</TableHead>
-              <TableHead>Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredAndSortedContacts.map((contact) => (
-              <TableRow key={contact.id}>
-                <TableCell className="font-medium">{contact.name}</TableCell>
-                <TableCell>{contact.email}</TableCell>
-                <TableCell>{contact.message}</TableCell>
-                <TableCell>{contact.date}</TableCell>
+      {filteredAndSortedContacts.length > 0 ? (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      {filteredAndSortedContacts.length === 0 && <p className="text-center text-gray-500 dark:text-gray-400 mt-4">No contacts found.</p>}
+            </TableHeader>
+            <TableBody>
+              {filteredAndSortedContacts.map((contact) => (
+                <TableRow key={contact.id}>
+                  <TableCell className="font-medium">{contact.name}</TableCell>
+                  <TableCell>{contact.email}</TableCell>
+                  <TableCell>{contact.date}</TableCell>
+                  <TableCell>
+                    <Button variant="ghost" onClick={() => handleViewMessage(contact.id)}>
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" onClick={() => handleDeleteMessage(contact.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <p className="text-center text-gray-500 dark:text-gray-400 mt-4">Maaf, belum ada pesan masuk.</p>
+      )}
     </div>
   );
 };

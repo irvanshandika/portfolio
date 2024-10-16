@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly PUBLIC_MESSAGING_SENDER_ID: string;
   readonly PUBLIC_APP_ID: string;
   readonly PUBLIC_TURNSTILE_SITE_KEY: string;
+  readonly PUBLIC_ANTHROPIC_API_KEY: string;
 }
 
 interface ImportMeta {

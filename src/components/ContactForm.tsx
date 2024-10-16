@@ -7,7 +7,7 @@ import { Send } from "lucide-react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import toast from "react-hot-toast";
-import { useAuth } from "@/lib/useAuth"; // Pastikan path ini benar
+import { useAuth } from "@/lib/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LoginModal from "./LoginModal";
 import Turnstile from "react-turnstile";

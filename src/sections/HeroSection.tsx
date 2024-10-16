@@ -19,7 +19,9 @@ export default function HeroSection() {
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">Muhammad Irvan Shandika</h1>
             <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">Web Developer | UI/UX Designer | Promp Engineer</p>
           </div>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">I am a web developer who focuses on developing websites and web-based applications. I also have experience in UI/UX design and promp engineer.</p>
+          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
+            I am a freelancer in the field of website development, both in terms of frontend and backend. For now I am still learning about the backend. I also have experience in UI/UX development and promp engineer.
+          </p>
           <div className="space-x-4">
             <Button onClick={() => (window.location.href = "/projects")}>
               See My Projects
