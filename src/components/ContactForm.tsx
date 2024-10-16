@@ -99,7 +99,7 @@ export default function ContactForm() {
           {user ? (
             <div className="pt-4">
               <Turnstile sitekey={`${import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}`} onVerify={handleTurnstileVerify} />
-              <Button type="submit">
+              <Button type="submit" disabled={!turnstileToken}>
                 <Send className="mr-2 h-4 w-4" /> Send Message
               </Button>
             </div>

@@ -6,7 +6,7 @@ import GoogleIcon from "./icons/GoogleIcon";
 import { useAuth } from "@/lib/useAuth";
 import toast from "react-hot-toast";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/config/FirebaseConfig"; // Pastikan path ini benar
+import { db } from "@/config/FirebaseConfig";
 
 export default function LoginModal() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -33,20 +33,20 @@ export default function LoginModal() {
     try {
       await signInWithGoogle();
       setIsOpen(false);
-      toast.success("Berhasil masuk!");
+      toast.success("Sign in successfully!");
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Gagal masuk. Silakan coba lagi.");
+      toast.error("Failed to log in. Please try again.");
     }
   };
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      toast.success("Berhasil keluar!");
+      toast.success("Exit successfully!");
     } catch (error) {
       console.error("Logout error:", error);
-      toast.error("Gagal keluar. Silakan coba lagi.");
+      toast.error("Failed to exit. Please try again.");
     }
   };
 
@@ -59,13 +59,13 @@ export default function LoginModal() {
             <AvatarFallback>{user.displayName?.[0] || "U"}</AvatarFallback>
           </Avatar>
         ) : (
-          <Button variant="outline">Login</Button>
+          <Button variant="outline">Sign In</Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{user ? "Profile" : "Login"}</DialogTitle>
-          <DialogDescription>{user ? `Logged in as ${user.displayName}` : "Silakan login menggunakan akun Google Anda."}</DialogDescription>
+          <DialogTitle>{user ? "Profile" : "Sign In"}</DialogTitle>
+          <DialogDescription>{user ? `Logged in as ${user.email}` : "Please signin using your Google account."}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center py-4">
           {user ? (
@@ -74,7 +74,7 @@ export default function LoginModal() {
                 <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} onError={() => console.log("Error loading image in modal")} />
                 <AvatarFallback>{user.displayName?.[0] || "U"}</AvatarFallback>
               </Avatar>
-              <p className="mb-4">{user.email}</p>
+              <p className="mb-4">{user.displayName}</p>
               {userRole === "admin" && (
                 <Button variant="outline" className="mb-4" onClick={() => (window.location.href = "/dashboard")}>
                   Go to Dashboard

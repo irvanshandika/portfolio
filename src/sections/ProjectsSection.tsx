@@ -1,12 +1,14 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ExternalLink, Github } from "lucide-react";
+import { db } from "@/config/FirebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
 
 interface Project {
-  id: number;
+  id: string;
   title: string;
   description: string;
   image: string;
@@ -16,51 +18,20 @@ interface Project {
   fullDescription: string;
 }
 
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "First Portfolio Website",
-    description: "My first project portfolio using HTML, CSS, Javascript, and Using Bootstrap Framework.",
-    image: "https://res.cloudinary.com/dszhlpm81/image/upload/v1723043534/assets/UFPMOvuUtfuMxUpG2yy%2BnF743hBOeLEzqjNEDiHixcQ%3D/foto1_yc8plg_utfgt5.jpg",
-    tags: ["HTML", "CSS", "Javascript", "Bootstrap"],
-    githubLink: "#",
-    liveLink: "https://irvanshandika.netlify.app/",
-    fullDescription: "First Portfolio HTML, CSS, Javascript, and Using Bootstrap FrameworkThis is my first project portfolio using HTML, CSS, Javascript, and Using Bootstrap Framework.",
-  },
-  {
-    id: 2,
-    title: "May Beauty Skin v1",
-    description: "Here is my second project in learning frontend web developer. Here I use the JavaScript framework React JS and Bootstrap 5.",
-    image: "https://res.cloudinary.com/dszhlpm81/image/upload/v1723043536/assets/UFPMOvuUtfuMxUpG2yy%2BnF743hBOeLEzqjNEDiHixcQ%3D/foto2_wbodpu_io04s0.jpg",
-    tags: ["React", "Javascript", "Bootstrap"],
-    githubLink: "https://github.com/irvanshandika/maybeautyskin",
-    liveLink: "https://maybeautyskin.vercel.app/",
-    fullDescription: "Here is my second project in learning frontend web developer. Here I use the JavaScript framework React JS and Bootstrap 5.",
-  },
-  {
-    id: 3,
-    title: "Digital Library",
-    description: "This project is the first project that I made with my friends for the final project in the Advanced Programming course.",
-    image: "https://res.cloudinary.com/dszhlpm81/image/upload/v1723043536/assets/UFPMOvuUtfuMxUpG2yy%2BnF743hBOeLEzqjNEDiHixcQ%3D/foto3_k9rwdz_emzvhu.jpg",
-    tags: ["React", "Bootstrap", "Javascript"],
-    githubLink: "https://github.com/irvanshandika/Final-Project-Kel6",
-    liveLink: "https://perpustakaandigital.vercel.app/",
-    fullDescription: "This project is the first project that I made with my friends for the final project in the Advanced Programming course.",
-  },
-  {
-    id: 4,
-    title: "Memories Album",
-    description: "This Memories Album is my lesson in learning full stack using Next JS and Cloudinary for save images.",
-    image: "https://res.cloudinary.com/dszhlpm81/image/upload/v1723043862/assets/UFPMOvuUtfuMxUpG2yy%2BnF743hBOeLEzqjNEDiHixcQ%3D/foto5_tu8msy_ct3khs.jpg",
-    tags: ["Next JS", "Cloudinary", "Typescript", "Tailwind CSS", "Node JS"],
-    githubLink: "https://github.com/yourusername/personal-blog",
-    liveLink: "https://albumif07.vercel.app/",
-    fullDescription: "My first project was learning Full Stack by using Next JS and Typescript programming language to create a Memory Album website. Here the storage for uploading photos uses the Cloudinary platform.",
-  },
-];
-
 export default function ProjectShowcase() {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const projectsCollection = collection(db, "projects_db");
+      const projectsSnapshot = await getDocs(projectsCollection);
+      const projectsList = projectsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Project);
+      setProjects(projectsList);
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -73,7 +44,7 @@ export default function ProjectShowcase() {
               <CardDescription>{project.description}</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-              <img src={project.image} alt={project.title} width={300} height={200} className="w-full h-48 object-cover rounded-md mb-4" />
+              <img src={project.image} alt={project.title} className="w-full h-48 object-cover rounded-md mb-4" />
               <div className="flex flex-wrap gap-2 mb-4">
                 {project.tags.map((tag, index) => (
                   <Badge key={index} variant="secondary">
@@ -91,7 +62,7 @@ export default function ProjectShowcase() {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <img src={project.image} alt={project.title} width={300} height={200} className="w-full h-48 object-cover rounded-md mb-4" />
+                    <img src={selectedProject?.image} alt={selectedProject?.title} className="w-full h-48 object-cover rounded-md mb-4" />
                     <DialogTitle>{selectedProject?.title}</DialogTitle>
                     <DialogDescription>{selectedProject?.fullDescription}</DialogDescription>
                   </DialogHeader>

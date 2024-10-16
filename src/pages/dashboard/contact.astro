@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DashboardContactSection from "@/sections/Dashboard/DashboardContactSection";
+import Sidebar from "@/components/Sidebar";
+---
+
+<Layout title="Dashboard Contact | Portfolio Online">
+  <Sidebar>
+    <DashboardContactSection client:load />
+  </Sidebar>
+</Layout>

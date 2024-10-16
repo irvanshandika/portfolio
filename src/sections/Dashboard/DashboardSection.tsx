@@ -1,3 +1,7 @@
+import { useState, useEffect } from "react";
+import { auth, db } from "@/config/FirebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -14,7 +18,44 @@ const visitorData = [
   { date: "2023-06-07", visitors: 300 },
 ];
 
+const useAdminCheck = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists() && userSnap.data().role === "admin") {
+          setIsAdmin(true);
+        } else {
+          window.location.href = "/";
+        }
+      } else {
+        window.location.href = "/";
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return { isAdmin, loading };
+};
+
 const DashboardSection = () => {
+  const { isAdmin, loading } = useAdminCheck();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
+
   const totalVisitors = visitorData.reduce((sum, day) => sum + day.visitors, 0);
   const averageVisitors = Math.round(totalVisitors / visitorData.length);
   const lastDayVisitors = visitorData[visitorData.length - 1].visitors;
