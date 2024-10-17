@@ -30,7 +30,8 @@ import ToastProvider from "@/components/ToastProvider";
   _linkedin_partner_id = "6353754";
   window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
   window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-</script><script type="text/javascript">
+</script>
+<script type="text/javascript">
   (function (l) {
     if (!l) {
       window.lintrk = function (a, b) {
@@ -45,6 +46,20 @@ import ToastProvider from "@/components/ToastProvider";
     b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
     s.parentNode.insertBefore(b, s);
   })(window.lintrk);
+
+  (function (h, o, t, j, a, r) {
+    h.hj =
+      h.hj ||
+      function () {
+        (h.hj.q = h.hj.q || []).push(arguments);
+      };
+    h._hjSettings = { hjid: 5175023, hjsv: 6 };
+    a = o.getElementsByTagName("head")[0];
+    r = o.createElement("script");
+    r.async = 1;
+    r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
 </script>
 <noscript>
   <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=6353754&fmt=gif" />

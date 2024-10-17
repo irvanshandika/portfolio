@@ -12,6 +12,7 @@ import LoginModal from "./LoginModal";
 import Turnstile from "react-turnstile";
 import "react-quill/dist/quill.snow.css";
 import { Toaster, toast } from "react-hot-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
 
@@ -19,10 +20,14 @@ export default function ContactForm() {
   const [contactMessage, setContactMessage] = useState("");
   const [isClient, setIsClient] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     setIsClient(true);
+    // Simulate loading delay
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleTurnstileVerify = useCallback((token: string) => {
@@ -64,6 +69,24 @@ export default function ContactForm() {
     }
   };
 
+  const ContactFormSkeleton = () => (
+    <div className="space-y-4">
+      <div>
+        <Skeleton className="h-4 w-16 mb-2" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+      <div>
+        <Skeleton className="h-4 w-16 mb-2" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+      <div>
+        <Skeleton className="h-4 w-20 mb-2" />
+        <Skeleton className="h-36 w-full" />
+      </div>
+      <Skeleton className="h-10 w-32" />
+    </div>
+  );
+
   return (
     <Card>
       <Toaster position="top-right" />
@@ -71,44 +94,48 @@ export default function ContactForm() {
         <CardTitle>Contact</CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleContactSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
+        {loading ? (
+          <ContactFormSkeleton />
+        ) : (
+          <form onSubmit={handleContactSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="name">Name</Label>
+              {user ? (
+                <div className="flex items-center space-x-2">
+                  <Avatar>
+                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                    <AvatarFallback>{user.displayName?.[0] || "U"}</AvatarFallback>
+                  </Avatar>
+                  <span>{user.displayName}</span>
+                </div>
+              ) : (
+                <Input id="name" name="name" placeholder="Masukkan nama Anda" required disabled />
+              )}
+            </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" name="email" type="email" placeholder="Masukkan email Anda" required defaultValue={user?.email || ""} disabled={!!user} />
+            </div>
+            <div>
+              <Label htmlFor="message">Message</Label>
+              {isClient && (
+                <React.Suspense fallback={<div>Loading editor...</div>}>
+                  <ReactQuill theme="snow" value={contactMessage} onChange={setContactMessage} className="h-36 lg:mb-12 mb-20" placeholder="Tulis pesan Anda di sini" />
+                </React.Suspense>
+              )}
+            </div>
             {user ? (
-              <div className="flex items-center space-x-2">
-                <Avatar>
-                  <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
-                  <AvatarFallback>{user.displayName?.[0] || "U"}</AvatarFallback>
-                </Avatar>
-                <span>{user.displayName}</span>
+              <div className="pt-4">
+                <Turnstile sitekey={`${import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}`} onVerify={handleTurnstileVerify} />
+                <Button type="submit" disabled={!turnstileToken}>
+                  <Send className="mr-2 h-4 w-4" /> Send Message
+                </Button>
               </div>
             ) : (
-              <Input id="name" name="name" placeholder="Masukkan nama Anda" required disabled />
+              <LoginModal />
             )}
-          </div>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" placeholder="Masukkan email Anda" required defaultValue={user?.email || ""} disabled={!!user} />
-          </div>
-          <div>
-            <Label htmlFor="message">Message</Label>
-            {isClient && (
-              <React.Suspense fallback={<div>Loading editor...</div>}>
-                <ReactQuill theme="snow" value={contactMessage} onChange={setContactMessage} className="h-36 lg:mb-12 mb-20" placeholder="Tulis pesan Anda di sini" />
-              </React.Suspense>
-            )}
-          </div>
-          {user ? (
-            <div className="pt-4">
-              <Turnstile sitekey={`${import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}`} onVerify={handleTurnstileVerify} />
-              <Button type="submit" disabled={!turnstileToken}>
-                <Send className="mr-2 h-4 w-4" /> Send Message
-              </Button>
-            </div>
-          ) : (
-            <LoginModal />
-          )}
-        </form>
+          </form>
+        )}
       </CardContent>
     </Card>
   );

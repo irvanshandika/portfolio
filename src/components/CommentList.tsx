@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { collection, query, orderBy, onSnapshot, Timestamp, limit } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Comment {
   id: string;
@@ -14,6 +15,7 @@ interface Comment {
 
 export default function CommentList() {
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
   const commentsEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,6 +26,7 @@ export default function CommentList() {
         commentsData.push({ id: doc.id, ...doc.data() } as Comment);
       });
       setComments(commentsData);
+      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -41,6 +44,18 @@ export default function CommentList() {
     commentsEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const CommentSkeleton = () => (
+    <div className="border-b pb-4 last:border-b-0">
+      <div className="flex items-center space-x-2">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <Skeleton className="h-4 w-24" />
+      </div>
+      <Skeleton className="h-3 w-20 mt-2" />
+      <Skeleton className="h-4 w-full mt-2" />
+      <Skeleton className="h-4 w-2/3 mt-1" />
+    </div>
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -48,19 +63,23 @@ export default function CommentList() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4 max-h-[400px] overflow-y-auto">
-          {comments.map((comment) => (
-            <div key={comment.id} className="border-b pb-4 last:border-b-0">
-              <div className="flex">
-                <Avatar>
-                  <AvatarImage src={comment.photoURL || undefined} alt={comment.name || "User"} />
-                  <AvatarFallback>{comment.name?.[0] || "U"}</AvatarFallback>
-                </Avatar>
-                <p className="font-semibold">{comment.name}</p>
-              </div>
-              <p className="text-sm text-muted-foreground">{formatDate(comment.date)}</p>
-              <div className="mt-2" dangerouslySetInnerHTML={{ __html: comment.message }} />
-            </div>
-          ))}
+          {loading
+            ? Array(5)
+                .fill(0)
+                .map((_, index) => <CommentSkeleton key={index} />)
+            : comments.map((comment) => (
+                <div key={comment.id} className="border-b pb-4 last:border-b-0">
+                  <div className="flex items-center space-x-2">
+                    <Avatar>
+                      <AvatarImage src={comment.photoURL || undefined} alt={comment.name || "User"} />
+                      <AvatarFallback>{comment.name?.[0] || "U"}</AvatarFallback>
+                    </Avatar>
+                    <p className="font-semibold">{comment.name}</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">{formatDate(comment.date)}</p>
+                  <div className="mt-2" dangerouslySetInnerHTML={{ __html: comment.message }} />
+                </div>
+              ))}
           <div ref={commentsEndRef} />
         </div>
       </CardContent>
