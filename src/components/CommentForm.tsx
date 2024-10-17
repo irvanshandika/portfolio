@@ -43,7 +43,7 @@ export default function CommentForm() {
 
     try {
       await addDoc(collection(db, "comments_db"), {
-        photoProfile: user.photoURL,
+        photoURL: user.photoURL,
         name: user.displayName,
         message: commentMessage,
         userId: user.uid,
