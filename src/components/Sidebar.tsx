@@ -36,10 +36,10 @@ const SidebarLayout: React.FC<SidebarProps> = ({ children }) => {
             <NavItem href="/dashboard" icon={<Home className="mr-2 h-4 w-4" />}>
               Dashboard
             </NavItem>
-            <NavItem href="/dashboard/project" icon={<Briefcase className="mr-2 h-4 w-4" />}>
+            <NavItem href="/dashboard/dashboard-projects" icon={<Briefcase className="mr-2 h-4 w-4" />}>
               Projects
             </NavItem>
-            <NavItem href="/dashboard/contact" icon={<Mail className="mr-2 h-4 w-4" />}>
+            <NavItem href="/dashboard/dashboard-contact" icon={<Mail className="mr-2 h-4 w-4" />}>
               Contact
             </NavItem>
           </nav>
