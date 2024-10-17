@@ -51,7 +51,8 @@ export default function CommentForm() {
       });
       toast.success("Komentar telah dikirim!");
       setCommentMessage("");
-      setTurnstileToken(null); // Reset token setelah submit
+      setTurnstileToken(null);
+      window.location.reload();
     } catch (error) {
       console.error("Error adding document: ", error);
       toast.error("Gagal mengirim komentar. Silakan coba lagi.");

@@ -57,6 +57,7 @@ export default function ContactForm() {
       form.reset();
       setContactMessage("");
       setTurnstileToken(null);
+      window.location.reload();
     } catch (error) {
       console.error("Error adding document: ", error);
       toast.error("Gagal mengirim pesan. Silakan coba lagi.");
