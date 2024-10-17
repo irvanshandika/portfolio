@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import GoogleIcon from "./icons/GoogleIcon";
 import { useAuth } from "@/lib/useAuth";
-import toast from "react-hot-toast";
+import { Toaster, toast } from "react-hot-toast";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/config/FirebaseConfig";
 
@@ -32,8 +32,8 @@ export default function LoginModal() {
   const handleLogin = async () => {
     try {
       await signInWithGoogle();
+      toast.success("Welcome back");
       setIsOpen(false);
-      toast.success("Sign in successfully!");
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Failed to log in. Please try again.");
@@ -43,7 +43,7 @@ export default function LoginModal() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      toast.success("Exit successfully!");
+      toast.success("See you soon, " + user?.displayName);
     } catch (error) {
       console.error("Logout error:", error);
       toast.error("Failed to exit. Please try again.");
@@ -52,6 +52,7 @@ export default function LoginModal() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Toaster position="top-right" />
       <DialogTrigger asChild>
         {user ? (
           <Avatar className="cursor-pointer">

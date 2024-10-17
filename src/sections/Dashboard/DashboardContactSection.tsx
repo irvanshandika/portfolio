@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowUpDown, Search, Eye, Trash2 } from "lucide-react";
-import { collection, query, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/config/FirebaseConfig";
-import toast from "react-hot-toast";
+import { collection, query, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { Toaster, toast } from "react-hot-toast";
+import { db, auth } from "@/config/FirebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 interface Contact {
   id: string;
@@ -16,12 +17,40 @@ interface Contact {
   date: string;
 }
 
+const useAdminCheck = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists() && userSnap.data().role === "admin") {
+          setIsAdmin(true);
+        } else {
+          window.location.href = "/";
+        }
+      } else {
+        window.location.href = "/";
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return { isAdmin, loading };
+};
+
 const ContactDashboard: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "date">("date");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [loading, setLoading] = useState(true);
+  const { isAdmin } = useAdminCheck();
 
   useEffect(() => {
     fetchContacts();
@@ -75,11 +104,16 @@ const ContactDashboard: React.FC = () => {
   };
 
   if (loading) {
-    return <div className="text-center mt-8">Loading...</div>;
+    return <div>Loading...</div>;
+  }
+
+  if (!isAdmin) {
+    return null;
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Toaster position="top-right" />
       <h1 className="text-3xl font-bold mb-6">Contact Dashboard</h1>
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <div className="relative flex-grow">
