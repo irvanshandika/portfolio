@@ -1,13 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Navbar from "@/components/Navbar.astro";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogSection from "@/sections/BlogSection";
-const currentPath = Astro.url.pathname;
 ---
 
 <Layout title="Blog | Portfolio Online">
-  <Navbar currentPath={currentPath} />
+  <Navbar client:load currentPath="/blog" />
   <BlogSection client:load />
   <Footer client:load />
 </Layout>

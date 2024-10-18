@@ -1,10 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Navbar from "@/components/Navbar.astro";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Blog from "@/sections/Blog";
 
-const currentPath = Astro.url.pathname;
 const blogId = Astro.params.id;
 
 if (!blogId) {
@@ -13,7 +12,7 @@ if (!blogId) {
 ---
 
 <Layout title="Blog | Portfolio Online">
-  <Navbar currentPath={currentPath} />
+  <Navbar currentPath={Astro.url.pathname} client:load />
   <Blog blogId={blogId} client:load />
   <Footer client:load />
 </Layout>

@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Navbar from "@/components/Navbar.astro";
+import Navbar from "@/components/Navbar";
 import ErrorPage from "@/sections/ErrorPage";
 import Footer from "@/components/Footer";
 
@@ -29,7 +29,7 @@ switch (status) {
 ---
 
 <Layout title={`${title} | Portfolio Online`}>
-  <Navbar />
+  <Navbar client:load currentPath={Astro.url.pathname} />
   <ErrorPage client:load status={status} title={title} message={message} />
   <Footer client:load />
 </Layout>

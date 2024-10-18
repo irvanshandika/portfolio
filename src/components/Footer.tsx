@@ -161,7 +161,8 @@ const FooterBlock = () => {
         <div className="border-t border-t-gray-200 dark:border-t-gray-800 py-16 md:py-20 flex flex-col lg:flex-row gap-14 gap-y-16">
           <div className="w-full lg:w-96 space-y-6">
             <a href="/" className="flex">
-              <img src="/favicon.svg" alt="logo" className="w-7 h-7" />
+              <img src="/favicon.svg" alt="logo" className="w-7 h-7 hidden dark:block" />
+              <img src="/AstroLight.svg" alt="logo" className="w-7 h-7 block dark:hidden" />
               Irvans
             </a>
             <p className="max-w-lg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta iusto est quia a</p>

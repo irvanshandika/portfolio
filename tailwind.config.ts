@@ -2,10 +2,7 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: [
-	"./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}", 
-	"./node_modules/preline/preline.js",
-],
+  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
       borderRadius: {
@@ -55,10 +52,10 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      fontFamily: {
+        "poppins": ["Poppins", "sans-serif"],
+      },
     },
   },
-  plugins: [
-	require("preline/plugin"), 
-	require("tailwindcss-animate"),
-	],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;
