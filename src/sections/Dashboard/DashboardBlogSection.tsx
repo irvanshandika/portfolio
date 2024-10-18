@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { db, storage, auth } from "@/config/FirebaseConfig";
-import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -23,7 +24,35 @@ interface Blog {
   authorName: string;
 }
 
+const useAdminCheck = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists() && userSnap.data().role === "admin") {
+          setIsAdmin(true);
+        } else {
+          window.location.href = "/";
+        }
+      } else {
+        window.location.href = "/";
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  return { isAdmin, loading };
+};
+
 const BlogDashboard: React.FC = () => {
+  const { isAdmin, loading } = useAdminCheck();
   const [user] = useAuthState(auth);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [newBlog, setNewBlog] = useState<Omit<Blog, "id" | "createdAt" | "authorId" | "authorName">>({
@@ -140,6 +169,14 @@ const BlogDashboard: React.FC = () => {
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} jam`;
     return `${Math.floor(diffInSeconds / 86400)} hari`;
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
