@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Menu, X, Home, User, Briefcase, Mail } from "lucide-react";
+import { Menu, X, Home, User, Briefcase, Mail, Rss } from "lucide-react";
 
 interface SidebarProps {
   children: React.ReactNode;
@@ -41,6 +41,9 @@ const SidebarLayout: React.FC<SidebarProps> = ({ children }) => {
             </NavItem>
             <NavItem href="/dashboard/dashboard-contact" icon={<Mail className="mr-2 h-4 w-4" />}>
               Contact
+            </NavItem>
+            <NavItem href="/dashboard/dashboard-blog" icon={<Rss className="mr-2 h-4 w-4" />}>
+              Blog
             </NavItem>
           </nav>
         </ScrollArea>

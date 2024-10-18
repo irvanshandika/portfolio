@@ -28,6 +28,7 @@
     "astro": "^4.16.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "firebase": "^10.14.1",
     "gsap": "^3.12.5",
     "lucide-react": "^0.452.0",
@@ -46,6 +47,7 @@
     "typescript": "^5.6.3"
   },
   "devDependencies": {
+    "@types/date-fns": "^2.5.3",
     "@types/node": "^22.7.5",
     "@types/react-dropzone": "^4.2.2"
   }

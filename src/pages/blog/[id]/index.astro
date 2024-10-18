@@ -2,12 +2,18 @@
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/Navbar.astro";
 import Footer from "@/components/Footer";
-import BlogSection from "@/sections/BlogSection";
+import Blog from "@/sections/Blog";
+
 const currentPath = Astro.url.pathname;
+const blogId = Astro.params.id;
+
+if (!blogId) {
+  return Astro.redirect("/404");
+}
 ---
 
 <Layout title="Blog | Portfolio Online">
   <Navbar currentPath={currentPath} />
-  <BlogSection client:load />
+  <Blog blogId={blogId} client:load />
   <Footer client:load />
 </Layout>
