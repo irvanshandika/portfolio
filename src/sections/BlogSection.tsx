@@ -101,6 +101,18 @@ const BlogPage: React.FC = () => {
     return content.substr(0, maxLength) + "...";
   };
 
+  const formatTimestamp = (timestamp: any) => {
+    if (!timestamp) return "0 seconds";
+    const now = new Date();
+    const blogDate = timestamp.toDate();
+    const diffInSeconds = Math.floor((now.getTime() - blogDate.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return `${diffInSeconds} seconds`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours`;
+    return `${Math.floor(diffInSeconds / 86400)} days`;
+  };
+
   const BlogSkeleton = () => (
     <Card>
       <CardHeader>
@@ -145,7 +157,7 @@ const BlogPage: React.FC = () => {
                   <CardTitle className="line-clamp-1">{blog.title}</CardTitle>
                   <CardDescription className="flex items-center text-sm">
                     <User className="mr-1 h-4 w-4" /> {blog.authorName}
-                    <Calendar className="ml-4 mr-1 h-4 w-4" /> {formatDate(blog.createdAt)}
+                    <Calendar className="ml-4 mr-1 h-4 w-4" /> {formatTimestamp(blog.createdAt)} ago
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">

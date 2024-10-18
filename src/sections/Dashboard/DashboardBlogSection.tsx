@@ -161,15 +161,15 @@ const BlogDashboard: React.FC = () => {
   };
 
   const formatTimestamp = (timestamp: any) => {
-    if (!timestamp) return "0 detik";
+    if (!timestamp) return "0 seconds";
     const now = new Date();
     const blogDate = timestamp.toDate();
     const diffInSeconds = Math.floor((now.getTime() - blogDate.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return `${diffInSeconds} detik`;
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} menit`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} jam`;
-    return `${Math.floor(diffInSeconds / 86400)} hari`;
+    if (diffInSeconds < 60) return `${diffInSeconds} seconds`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours`;
+    return `${Math.floor(diffInSeconds / 86400)} days`;
   };
 
   if (loading) {

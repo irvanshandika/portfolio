@@ -82,6 +82,18 @@ const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
     return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   };
 
+  const formatTimestamp = (timestamp: any) => {
+    if (!timestamp) return "0 seconds";
+    const now = new Date();
+    const blogDate = timestamp.toDate();
+    const diffInSeconds = Math.floor((now.getTime() - blogDate.getTime()) / 1000);
+
+    if (diffInSeconds < 60) return `${diffInSeconds} seconds`;
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours`;
+    return `${Math.floor(diffInSeconds / 86400)} days`;
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -141,7 +153,7 @@ const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
                 <User className="w-4 h-4 mr-1" />
                 <span className="mr-4">{blog.authorName}</span>
                 <Calendar className="w-4 h-4 mr-1" />
-                <span>{formatDate(blog.createdAt)}</span>
+                <span>{formatTimestamp(blog.createdAt)} ago</span>
               </div>
             </CardHeader>
             <CardContent>
