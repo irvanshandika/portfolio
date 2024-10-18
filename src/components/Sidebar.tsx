@@ -43,7 +43,7 @@ const SidebarLayout: React.FC<SidebarProps> = ({ children }) => {
               Contact
             </NavItem>
             <NavItem href="/dashboard/blogs" icon={<Rss className="mr-2 h-4 w-4" />}>
-              Blog
+              Blogs
             </NavItem>
           </nav>
         </ScrollArea>
