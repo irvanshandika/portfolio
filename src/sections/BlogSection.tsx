@@ -154,7 +154,7 @@ const BlogPage: React.FC = () => {
                 </CardContent>
                 <CardFooter>
                   <Button variant="outline" size="sm" asChild className="w-full">
-                    <a href={`/blog/${blog.id}`}>Read More</a>
+                    <a href={`/blogs/${blog.id}`}>Read More</a>
                   </Button>
                 </CardFooter>
               </Card>

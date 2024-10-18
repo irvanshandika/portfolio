@@ -1,11 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import MessageView from "@/sections/Dashboard/MessageView";
-import SidebarLayout from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 ---
 
 <Layout title="Message View">
-  <SidebarLayout>
+  <Sidebar client:load>
     <MessageView client:load />
-  </SidebarLayout>
+  </Sidebar>
 </Layout>

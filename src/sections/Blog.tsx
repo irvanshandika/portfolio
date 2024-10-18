@@ -163,7 +163,7 @@ const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
                   <ul className="space-y-2">
                     {posts.map((post) => (
                       <li key={post.id}>
-                        <a href={`/blog/${post.id}`} className="text-sm hover:underline text-muted-foreground">
+                        <a href={`/blogs/${post.id}`} className="text-sm hover:underline text-muted-foreground">
                           {post.title}
                         </a>
                       </li>

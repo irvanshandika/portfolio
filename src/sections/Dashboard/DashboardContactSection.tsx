@@ -87,7 +87,7 @@ const ContactDashboard: React.FC = () => {
   };
 
   const handleViewMessage = (id: string) => {
-    window.location.href = `/dashboard/dashboard-contact/message/${id}`;
+    window.location.href = `/dashboard/contacts/message/${id}`;
   };
 
   const handleDeleteMessage = async (id: string) => {

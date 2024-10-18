@@ -22,7 +22,7 @@ const Navbar = ({ currentPath }: { currentPath: string }) => {
     { path: "/about", label: "About" },
     { path: "/projects", label: "Projects" },
     { path: "/contact", label: "Contact" },
-    { path: "/blog", label: "Blog" },
+    { path: "/blogs", label: "Blogs" },
   ];
 
   return (
