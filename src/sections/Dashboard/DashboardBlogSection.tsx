@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { db, storage, auth } from "@/config/FirebaseConfig";
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, serverTimestamp, query, where, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
@@ -65,7 +65,9 @@ const BlogDashboard: React.FC = () => {
   const [editingBlog, setEditingBlog] = useState<Blog | null>(null);
 
   useEffect(() => {
-    fetchBlogs();
+    if (user) {
+      fetchBlogs();
+    }
   }, [user]);
 
   const fetchBlogs = async () => {
@@ -175,7 +177,7 @@ const BlogDashboard: React.FC = () => {
   }
 
   if (!isAdmin) {
-    return null;
+    return <div>Access Denied</div>;
   }
 
   return (
@@ -206,9 +208,9 @@ const BlogDashboard: React.FC = () => {
                 </Button>
                 {thumbnailFile && <span className="text-sm text-muted-foreground">{thumbnailFile.name}</span>}
               </div>
-              <React.Suspense fallback={<div>Loading editor...</div>}>
+              <Suspense fallback={<div>Loading editor...</div>}>
                 <ReactQuill theme="snow" value={newBlog.content} onChange={handleContentChange} />
-              </React.Suspense>
+              </Suspense>
               <Button type="submit">{editingBlog ? "Update" : "Create"} Blog</Button>
             </form>
           </DialogContent>
