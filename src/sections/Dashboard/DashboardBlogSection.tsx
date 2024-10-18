@@ -172,6 +172,12 @@ const BlogDashboard: React.FC = () => {
     return `${Math.floor(diffInSeconds / 86400)} days`;
   };
 
+  const modules = {
+    toolbar: [[{ header: [1, 2, false] }], ["bold", "italic", "underline", "strike", "blockquote"], [{ list: "ordered" }, { list: "bullet" }], ["link", "image"], ["clean"]],
+  };
+
+  const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "link", "image"];
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -209,7 +215,7 @@ const BlogDashboard: React.FC = () => {
                 {thumbnailFile && <span className="text-sm text-muted-foreground">{thumbnailFile.name}</span>}
               </div>
               <Suspense fallback={<div>Loading editor...</div>}>
-                <ReactQuill theme="snow" value={newBlog.content} onChange={handleContentChange} />
+                <ReactQuill theme="snow" value={newBlog.content} modules={modules} formats={formats} onChange={handleContentChange} />
               </Suspense>
               <Button type="submit">{editingBlog ? "Update" : "Create"} Blog</Button>
             </form>
