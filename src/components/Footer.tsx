@@ -1,71 +1,185 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Github, Linkedin, Twitter } from "lucide-react";
+interface FooterItemProps {
+  text: string;
+  link: string;
+}
 
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
+const FooterItem = ({ text, link }: FooterItemProps) => {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-800 pt-12 pb-8">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="md:col-span-2">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Nama Anda</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Seorang pengembang web yang bersemangat menciptakan solusi digital yang inovatif dan efektif.</p>
-            <div className="flex space-x-4">
-              <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-                <Github className="w-6 h-6 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
-              </a>
-              <a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <Linkedin className="w-6 h-6 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
-              </a>
-              <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <Twitter className="w-6 h-6 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" />
-              </a>
-            </div>
+    <li>
+      <a href={link} className="duration-200 hover:text-blue-600 dark:hover:text-blue-500">
+        {text}
+      </a>
+    </li>
+  );
+};
+
+interface FooterBlockItemProps {
+  title: string;
+  items: { id: number; text: string; link: string }[];
+}
+
+const FooterBlockItem = ({ title, items }: FooterBlockItemProps) => {
+  return (
+    <div className="space-y-6">
+      <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{title}</h1>
+      <ul className="space-y-3">
+        {items.map((item) => (
+          <FooterItem key={item.id} {...item} />
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+const footerBlocks = [
+  {
+    id: 1,
+    title: "Services",
+    items: [
+      {
+        id: 1,
+        text: "Web design",
+        link: "#",
+      },
+      {
+        id: 2,
+        text: " Consultancy ",
+        link: "#",
+      },
+      {
+        id: 3,
+        text: "Web Development",
+        link: "#",
+      },
+      {
+        id: 4,
+        text: "Mobile Development",
+        link: "#",
+      },
+      {
+        id: 5,
+        text: "Mobile Development",
+        link: "#",
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "Company",
+    items: [
+      {
+        id: 1,
+        text: "About",
+        link: "#",
+      },
+      {
+        id: 2,
+        text: "Career",
+        link: "#",
+      },
+      {
+        id: 3,
+        text: "Contact",
+        link: "#",
+      },
+      {
+        id: 4,
+        text: "Services",
+        link: "#",
+      },
+      {
+        id: 5,
+        text: "Services",
+        link: "#",
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "Social",
+    items: [
+      {
+        id: 1,
+        text: "Twitter X",
+        link: "#",
+      },
+      {
+        id: 2,
+        text: "Instagram",
+        link: "#",
+      },
+      {
+        id: 3,
+        text: "Threds",
+        link: "#",
+      },
+      {
+        id: 4,
+        text: "Facebook",
+        link: "#",
+      },
+      {
+        id: 5,
+        text: "Linkedin",
+        link: "#",
+      },
+    ],
+  },
+  {
+    id: 4,
+    title: "Ressources",
+    items: [
+      {
+        id: 1,
+        text: "Blog",
+        link: "#",
+      },
+      {
+        id: 2,
+        text: "Privacy",
+        link: "#",
+      },
+      {
+        id: 3,
+        text: "Terms",
+        link: "#",
+      },
+      {
+        id: 4,
+        text: "FAQ",
+        link: "#",
+      },
+    ],
+  },
+];
+
+const FooterBlock = () => {
+  const year = new Date().getFullYear();
+  return (
+    <footer className="bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-300">
+      <div className="max-w-7xl mx-auto px-5 sm:px-10 md:px-12 lg:px-5">
+        <div className="border-t border-t-gray-200 dark:border-t-gray-800 py-16 md:py-20 flex flex-col lg:flex-row gap-14 gap-y-16">
+          <div className="w-full lg:w-96 space-y-6">
+            <a href="/" className="flex">
+              <img src="/favicon.svg" alt="logo" className="w-7 h-7" />
+              Irvans
+            </a>
+            <p className="max-w-lg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta iusto est quia a</p>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Tautan Cepat</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href="/" className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-                  Beranda
-                </a>
-              </li>
-              <li>
-                <a href="/about" className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-                  Tentang
-                </a>
-              </li>
-              <li>
-                <a href="/projects" className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-                  Proyek
-                </a>
-              </li>
-              <li>
-                <a href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-                  Kontak
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Berlangganan</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Dapatkan pembaruan terbaru dari saya.</p>
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-2">
-              <Input type="email" placeholder="Alamat email Anda" aria-label="Alamat email" />
-              <Button type="submit" className="w-full">
-                Berlangganan
-              </Button>
-            </form>
-          </div>
+          <nav className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-10">
+            {footerBlocks.map((footerBlock) => (
+              <FooterBlockItem key={footerBlock.id} {...footerBlock} />
+            ))}
+          </nav>
         </div>
-        <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-8 text-center">
-          <p className="text-gray-600 dark:text-gray-400">© {currentYear} Nama Anda. Seluruh hak cipta dilindungi.</p>
+      </div>
+      <div className="py-3 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-3xl mx-auto px-5 sm:px-10 md:px-12 lg:px-5 flex justify-center text-center">
+          <p> © {year} Irvans. All right reserved </p>
         </div>
       </div>
     </footer>
   );
 };
 
-export default Footer;
+export default FooterBlock;
