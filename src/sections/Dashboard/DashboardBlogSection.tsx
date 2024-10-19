@@ -203,7 +203,7 @@ const BlogDashboard: React.FC = () => {
               <Plus className="w-4 h-4 mr-2" /> New Blog
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] overflow-y-scroll">
             <DialogHeader>
               <DialogTitle>{editingBlog ? "Edit Blog" : "Add New Blog"}</DialogTitle>
             </DialogHeader>

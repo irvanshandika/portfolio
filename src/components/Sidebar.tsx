@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Menu, X, Home, User, Briefcase, Mail, Rss } from "lucide-react";
@@ -7,8 +7,13 @@ interface SidebarProps {
   children: React.ReactNode;
 }
 
-const SidebarLayout: React.FC<SidebarProps> = ({ children }) => {
+const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [currentPath, setCurrentPath] = useState("");
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -33,17 +38,20 @@ const SidebarLayout: React.FC<SidebarProps> = ({ children }) => {
         </div>
         <ScrollArea className="flex-1 py-4">
           <nav className="space-y-2 px-4">
-            <NavItem href="/dashboard" icon={<Home className="mr-2 h-4 w-4" />}>
+            <NavItem href="/dashboard" icon={<Home className="mr-2 h-4 w-4" />} isActive={currentPath === "/dashboard"}>
               Dashboard
             </NavItem>
-            <NavItem href="/dashboard/projects" icon={<Briefcase className="mr-2 h-4 w-4" />}>
+            <NavItem href="/dashboard/projects" icon={<Briefcase className="mr-2 h-4 w-4" />} isActive={currentPath === "/dashboard/projects"}>
               Projects
             </NavItem>
-            <NavItem href="/dashboard/contacts" icon={<Mail className="mr-2 h-4 w-4" />}>
+            <NavItem href="/dashboard/contacts" icon={<Mail className="mr-2 h-4 w-4" />} isActive={currentPath === "/dashboard/contacts"}>
               Contact
             </NavItem>
-            <NavItem href="/dashboard/blogger" icon={<Rss className="mr-2 h-4 w-4" />}>
-              Blogger
+            <NavItem href="/dashboard/blogs" icon={<Rss className="mr-2 h-4 w-4" />} isActive={currentPath === "/dashboard/blogs"}>
+              Blogs
+            </NavItem>
+            <NavItem href="/dashboard/users" icon={<User className="mr-2 h-4 w-4" />} isActive={currentPath === "/dashboard/users"}>
+              Users
             </NavItem>
           </nav>
         </ScrollArea>
@@ -71,15 +79,20 @@ interface NavItemProps {
   href: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  isActive: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ href, icon, children }) => {
+const NavItem: React.FC<NavItemProps> = ({ href, icon, children, isActive }) => {
   return (
-    <a href={href} className="flex items-center px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150 ease-in-out">
+    <a
+      href={href}
+      className={`flex items-center px-4 py-2 rounded-md transition-colors duration-150 ease-in-out ${
+        isActive ? "bg-gray-200 dark:bg-gray-700 text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+      }`}>
       {icon}
       <span>{children}</span>
     </a>
   );
 };
 
-export default SidebarLayout;
+export default Sidebar;

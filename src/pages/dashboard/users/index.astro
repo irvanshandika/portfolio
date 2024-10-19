@@ -1,0 +1,11 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DashboardUsersSection from "@/sections/Dashboard/DashboardUsersSection";
+import Sidebar from "@/components/Sidebar";
+---
+
+<Layout title="Dashboard Users | Portfolio Online">
+  <Sidebar client:load>
+    <DashboardUsersSection client:load />
+  </Sidebar>
+</Layout>
