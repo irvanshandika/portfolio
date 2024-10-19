@@ -22,6 +22,7 @@ interface Blog {
   createdAt: any;
   authorId: string;
   authorName: string;
+  photoURL?: string;
 }
 
 const useAdminCheck = () => {
@@ -55,7 +56,7 @@ const BlogDashboard: React.FC = () => {
   const { isAdmin, loading } = useAdminCheck();
   const [user] = useAuthState(auth);
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const [newBlog, setNewBlog] = useState<Omit<Blog, "id" | "createdAt" | "authorId" | "authorName">>({
+  const [newBlog, setNewBlog] = useState<Omit<Blog, "id" | "createdAt" | "authorId" | "authorName" | "photoURL">>({
     title: "",
     content: "",
     thumbnail: "",
@@ -112,6 +113,7 @@ const BlogDashboard: React.FC = () => {
         createdAt: serverTimestamp(),
         authorId: user.uid,
         authorName: user.displayName || "Anonymous",
+        photoURL: user.photoURL || "",
       };
 
       if (editingBlog) {

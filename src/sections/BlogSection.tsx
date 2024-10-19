@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { db } from "@/config/FirebaseConfig";
 import { collection, getDocs, orderBy, query, limit, startAfter, where } from "firebase/firestore";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, User, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface Blog {
   id: string;
@@ -14,6 +13,7 @@ interface Blog {
   thumbnail: string;
   createdAt: any;
   authorName: string;
+  photoURL?: string;
 }
 
 const BlogPage: React.FC = () => {
@@ -22,38 +22,34 @@ const BlogPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [lastVisible, setLastVisible] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const blogsPerPage = 6;
+  const blogsPerPage = 3;
 
   useEffect(() => {
     fetchBlogs();
   }, []);
 
   const fetchBlogs = async (search: string = "") => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      const blogsCollection = collection(db, "blogs");
-      let q = query(blogsCollection, orderBy("createdAt", "desc"), limit(blogsPerPage));
+      let blogQuery = query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(blogsPerPage));
 
       if (search) {
-        q = query(blogsCollection, where("title", ">=", search), where("title", "<=", search + "\uf8ff"), limit(blogsPerPage));
+        blogQuery = query(collection(db, "blogs"), where("title", ">=", search), where("title", "<=", search + "\uf8ff"), orderBy("title"), limit(blogsPerPage));
       }
 
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(blogQuery);
+      const fetchedBlogs: Blog[] = [];
+      querySnapshot.forEach((doc) => {
+        fetchedBlogs.push({ id: doc.id, ...doc.data() } as Blog);
+      });
 
-      const blogsList = querySnapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as Blog
-      );
-
-      setBlogs(blogsList);
+      setBlogs(fetchedBlogs);
       setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-      setLoading(false);
     } catch (err) {
-      console.error("Error fetching blogs: ", err);
-      setError("An error occurred while fetching blogs. Please try again later.");
+      console.error("Error fetching blogs:", err);
+      setError("An error occurred while fetching blogs. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -61,26 +57,26 @@ const BlogPage: React.FC = () => {
   const loadMoreBlogs = async () => {
     if (!lastVisible) return;
 
+    setLoading(true);
     try {
-      setLoading(true);
-      const blogsCollection = collection(db, "blogs");
-      const q = query(blogsCollection, orderBy("createdAt", "desc"), limit(blogsPerPage), startAfter(lastVisible));
-      const querySnapshot = await getDocs(q);
+      let blogQuery = query(collection(db, "blogs"), orderBy("createdAt", "desc"), startAfter(lastVisible), limit(blogsPerPage));
 
-      const newBlogs = querySnapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as Blog
-      );
+      if (searchTerm) {
+        blogQuery = query(collection(db, "blogs"), where("title", ">=", searchTerm), where("title", "<=", searchTerm + "\uf8ff"), orderBy("title"), startAfter(lastVisible), limit(blogsPerPage));
+      }
 
-      setBlogs((prevBlogs) => [...prevBlogs, ...newBlogs]);
+      const querySnapshot = await getDocs(blogQuery);
+      const fetchedBlogs: Blog[] = [];
+      querySnapshot.forEach((doc) => {
+        fetchedBlogs.push({ id: doc.id, ...doc.data() } as Blog);
+      });
+
+      setBlogs((prevBlogs) => [...prevBlogs, ...fetchedBlogs]);
       setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
-      setLoading(false);
     } catch (err) {
-      console.error("Error loading more blogs: ", err);
+      console.error("Error loading more blogs:", err);
       setError("An error occurred while loading more blogs. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -93,7 +89,7 @@ const BlogPage: React.FC = () => {
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "Unknown date";
     const date = timestamp.toDate();
-    return date.toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" });
+    return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   };
 
   const truncateContent = (content: string, maxLength: number) => {
@@ -114,20 +110,27 @@ const BlogPage: React.FC = () => {
   };
 
   const BlogSkeleton = () => (
-    <Card>
-      <CardHeader>
-        <Skeleton className="h-6 w-3/4 mb-2" />
-        <Skeleton className="h-4 w-1/2" />
-      </CardHeader>
-      <CardContent>
-        <Skeleton className="w-full h-48 mb-4" />
-        <Skeleton className="h-4 w-full mb-2" />
-        <Skeleton className="h-4 w-3/4" />
-      </CardContent>
-      <CardFooter>
-        <Skeleton className="h-10 w-28" />
-      </CardFooter>
-    </Card>
+    <div className="bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 px-px rounded-xl">
+      <div className="rounded-[11px] bg-gray-200 dark:bg-gray-800 relative">
+        <Skeleton className="rounded-[7px] w-full aspect-video" />
+        <div className="absolute -bottom-8 z-10 flex inset-x-2 rounded-lg bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-2">
+          <div className="flex items-center gap-x-4">
+            <Skeleton className="w-10 h-10 rounded-full" />
+            <div>
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-3 w-20 mt-1" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-14 px-5 pb-5 space-y-4">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-6 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-24" />
+      </div>
+    </div>
   );
 
   if (error) {
@@ -135,52 +138,76 @@ const BlogPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">Our Blog</h1>
-
-      <form onSubmit={handleSearch} className="mb-8 flex gap-2">
-        <Input type="text" placeholder="Search blogs..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex-grow" />
-        <Button type="submit">
-          <Search className="mr-2 h-4 w-4" />
-          Search
-        </Button>
-      </form>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {loading
-          ? Array(blogsPerPage)
-              .fill(0)
-              .map((_, index) => <BlogSkeleton key={index} />)
-          : blogs.map((blog) => (
-              <Card key={blog.id} className="flex flex-col">
-                <CardHeader>
-                  <CardTitle className="line-clamp-1">{blog.title}</CardTitle>
-                  <CardDescription className="flex items-center text-sm">
-                    <User className="mr-1 h-4 w-4" /> {blog.authorName}
-                    <Calendar className="ml-4 mr-1 h-4 w-4" /> {formatTimestamp(blog.createdAt)} ago
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  {blog.thumbnail && <img src={blog.thumbnail} alt={blog.title} className="w-full h-48 object-cover rounded-md mb-4" fetchPriority="high" loading="lazy" />}
-                  <div dangerouslySetInnerHTML={{ __html: truncateContent(blog.content, 150) }} className="mb-4 line-clamp-3" />
-                </CardContent>
-                <CardFooter>
-                  <Button variant="outline" size="sm" asChild className="w-full">
-                    <a href={`/blogs/${blog.id}`}>Read More</a>
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-      </div>
-
-      {!loading && blogs.length === 0 && <div className="text-center mt-8 text-gray-500 dark:text-gray-400">No blogs found. Try a different search term.</div>}
-
-      {!loading && lastVisible && blogs.length > 0 && (
-        <div className="text-center mt-8">
-          <Button onClick={loadMoreBlogs}>Load More</Button>
+    <section className="py-20">
+      <div className="max-w-7xl mx-auto px-5 sm:px-10 md:px-12 lg:px-5 space-y-14">
+        <div className="text-center max-w-2xl mx-auto space-y-5">
+          <span className="pl-5 relative before:absolute before:w-4 before:h-0.5 before:rounded-md before:left-0 before:top-1/2 before:bg-sky-700 dark:before:bg-sky-600 text-sky-700 dark:text-sky-500">News</span>
+          <h2 className="text-3xl font-semibold text-blue-950 dark:text-gray-200 md:text-4xl xl:text-5xl leading-tight">From our latest Blog Post</h2>
+          <div className="flex justify-center mt-2">
+          {!loading && lastVisible && blogs.length > 0 && (
+            <button onClick={loadMoreBlogs} className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-blue-600 dark:text-gray-300 flex items-center gap-x-3">
+              See More
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          )}
+          </div>
         </div>
-      )}
-    </div>
+
+        <form onSubmit={handleSearch} className="mb-8 flex gap-2">
+          <Input type="text" placeholder="Search blogs..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="flex-grow" />
+          <Button type="submit">
+            <Search className="mr-2 h-4 w-4" />
+            Search
+          </Button>
+        </form>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {loading
+            ? Array(blogsPerPage)
+                .fill(0)
+                .map((_, index) => <BlogSkeleton key={index} />)
+            : blogs.map((blog) => (
+                <div key={blog.id} className="bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-900 px-px rounded-xl">
+                  <div className="rounded-[11px] bg-gray-200 dark:bg-gray-800 relative">
+                    <img src={blog.thumbnail} alt="article cover" width="1400" className="rounded-[7px] w-full aspect-video object-cover" />
+                    <div className="absolute -bottom-8 z-10 flex inset-x-2 rounded-lg bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-2">
+                      <div className="flex items-center gap-x-4">
+                        <img src={blog.photoURL} alt="" width="800" className="w-10 h-10 object-cover rounded-full" />
+                        <div>
+                          <p className="text-gray-800 dark:text-gray-50 font-semibold">By {blog.authorName}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-300">Author</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-14 px-5 pb-5 space-y-4">
+                    <span className="text-blue-600 dark:text-blue-400 text-sm">{formatTimestamp(blog.createdAt)}</span>
+                    <h1 className="text-gray-900 dark:text-white text-xl font-semibold">{blog.title}</h1>
+                    <span className="text-gray-700 dark:text-gray-300 line-clamp-2" dangerouslySetInnerHTML={{ __html: truncateContent(blog.content, 150) }} />
+                    <a href={`/blogs/${blog.id}`} className="flex items-center gap-x-2 text-blue-600 dark:text-blue-400">
+                      Read more
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                        <path fillRule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clipRule="evenodd" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              ))}
+        </div>
+
+        {!loading && blogs.length === 0 && <div className="text-center mt-8 text-gray-500 dark:text-gray-400">No blogs found. Try a different search term.</div>}
+
+        {/* {!loading && lastVisible && blogs.length > 0 && (
+          <div className="text-center mt-8">
+            <Button onClick={loadMoreBlogs} className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-blue-600 dark:text-gray-300">
+              Load More
+            </Button>
+          </div>
+        )} */}
+      </div>
+    </section>
   );
 };
 
