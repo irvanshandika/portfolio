@@ -59,10 +59,15 @@ import "@/styles/global.css";
     r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
     a.appendChild(r);
   })(window, document, "https://static.hotjar.com/c/hotjar-", ".js?sv=");
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "G-QWFK1HLP35");
 </script>
-<noscript>
-  <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=6353754&fmt=gif" />
-</noscript>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -97,7 +102,11 @@ import "@/styles/global.css";
   </head>
   <body class="font-poppins">
     <slot />
+    <noscript>
+      <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=6353754&fmt=gif" />
+    </noscript>
     <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
     <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QWFK1HLP35"></script>
   </body>
 </html>
