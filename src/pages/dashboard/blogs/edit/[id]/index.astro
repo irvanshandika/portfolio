@@ -3,7 +3,9 @@ import Layout from "@/layouts/Layout.astro";
 import Sidebar from "@/components/Sidebar";
 import EditBlog from "@/sections/Dashboard/EditBlog";
 
-export const prerender = false;
+export async function getStaticPaths() {
+  return [{ params: { id: "placeholder" } }];
+}
 
 const { id } = Astro.params;
 
