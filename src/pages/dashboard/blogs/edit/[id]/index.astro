@@ -2,15 +2,18 @@
 import Layout from "@/layouts/Layout.astro";
 import Sidebar from "@/components/Sidebar";
 import EditBlog from "@/sections/Dashboard/EditBlog";
-const blogId = Astro.params.id;
 
-if (!blogId) {
+export const prerender = false;
+
+const { id } = Astro.params;
+
+if (!id) {
   return Astro.redirect("/404");
 }
 ---
 
 <Layout title="Edit Blog | Portfolio Online">
   <Sidebar client:load>
-    <EditBlog client:load blogId={blogId} />
+    <EditBlog client:load blogId={id} />
   </Sidebar>
 </Layout>
