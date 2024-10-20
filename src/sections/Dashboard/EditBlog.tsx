@@ -24,27 +24,36 @@ interface EditBlogProps {
 }
 
 const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
-  const [user] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth);
   const [blog, setBlog] = useState<Blog | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchBlog();
-  }, [blogId]);
+    if (!loading) {
+      fetchBlog();
+    }
+  }, [loading, blogId]);
 
   const fetchBlog = async () => {
+    setIsLoading(true);
     try {
+      console.log("Fetching blog with ID:", blogId);
       const blogDoc = doc(db, "blogs", blogId);
       const blogSnapshot = await getDoc(blogDoc);
 
       if (blogSnapshot.exists()) {
+        console.log("Blog data:", blogSnapshot.data());
         setBlog({ id: blogSnapshot.id, ...blogSnapshot.data() } as Blog);
       } else {
+        console.log("Blog not found");
         toast.error("Blog not found");
       }
     } catch (error) {
       console.error("Error fetching blog: ", error);
       toast.error("An error occurred while fetching the blog. Please try again later.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,8 +104,20 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
 
   const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "link", "image"];
 
-  if (!blog) {
+  if (loading || isLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!user) {
+    return <div>Please log in to edit blogs.</div>;
+  }
+
+  if (!blog) {
+    return <div>Blog not found.</div>;
   }
 
   return (
