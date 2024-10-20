@@ -38,6 +38,7 @@ const useAdminCheck = () => {
         if (userSnap.exists() && userSnap.data().role === "admin") {
           setIsAdmin(true);
         } else {
+          toast.error("You are not authorized to view this page.");
           window.location.href = "/";
         }
       } else {
@@ -194,7 +195,15 @@ const ProjectDashboard: React.FC = () => {
   }
 
   if (!isAdmin) {
-    return null;
+    return (
+      <>
+        <Toaster position="top-right" />
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-3xl font-semibold">Unauthorized Access</h1>
+          <p className="text-lg mt-4">You are not authorized to view this page.</p>
+        </div>
+      </>
+    );
   }
 
   return (
