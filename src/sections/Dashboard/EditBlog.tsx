@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Toaster, toast } from "react-hot-toast";
-import { Image, ArrowLeft, Loader2, Moon, Sun } from "lucide-react";
+import { Image, ArrowLeft, Loader2 } from "lucide-react";
 import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
@@ -21,6 +21,7 @@ interface Blog {
 
 interface EditBlogProps {
   blogId: string;
+  blogTitle: string;
 }
 
 const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {

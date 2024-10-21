@@ -23,6 +23,7 @@ interface ArchiveItem {
 
 interface BlogProps {
   blogId: string;
+  blogTitle: string;
 }
 
 const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
