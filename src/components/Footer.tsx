@@ -51,16 +51,6 @@ const footerBlocks = [
         text: "Web Development",
         link: "#",
       },
-      {
-        id: 4,
-        text: "Mobile Development",
-        link: "#",
-      },
-      {
-        id: 5,
-        text: "Mobile Development",
-        link: "#",
-      },
     ],
   },
   {
@@ -70,7 +60,7 @@ const footerBlocks = [
       {
         id: 1,
         text: "About",
-        link: "#",
+        link: "/about",
       },
       {
         id: 2,
@@ -80,7 +70,7 @@ const footerBlocks = [
       {
         id: 3,
         text: "Contact",
-        link: "#",
+        link: "/contact",
       },
       {
         id: 4,
@@ -100,28 +90,28 @@ const footerBlocks = [
     items: [
       {
         id: 1,
-        text: "Twitter X",
-        link: "#",
+        text: "Instagram",
+        link: "https://www.instagram.com/irvan_shandika/",
       },
       {
         id: 2,
-        text: "Instagram",
-        link: "#",
+        text: "Threds",
+        link: "https://www.threads.net/@irvan_shandika",
       },
       {
         id: 3,
-        text: "Threds",
-        link: "#",
+        text: "Facebook",
+        link: "https://www.facebook.com/shandika.irvan/",
       },
       {
         id: 4,
-        text: "Facebook",
-        link: "#",
+        text: "Linkedin",
+        link: "https://www.linkedin.com/in/irvan-shandika/",
       },
       {
         id: 5,
-        text: "Linkedin",
-        link: "#",
+        text: "Github",
+        link: "https://github.com/irvanshandika",
       },
     ],
   },
@@ -131,8 +121,8 @@ const footerBlocks = [
     items: [
       {
         id: 1,
-        text: "Blog",
-        link: "#",
+        text: "Blogs",
+        link: "/blogs",
       },
       {
         id: 2,
@@ -165,11 +155,13 @@ const FooterBlock = () => {
               <img src="/AstroLight.svg" alt="logo" className="w-7 h-7 block dark:hidden" />
               Irvans
             </a>
-            <p className="max-w-lg">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta iusto est quia a</p>
+            <p className="max-w-lg">I am a freelancer in the field of website development, both in terms of frontend and backend. I also have experience in UI/UX development and promp engineer.</p>
           </div>
           <nav className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-10">
             {footerBlocks.map((footerBlock) => (
-              <FooterBlockItem key={footerBlock.id} {...footerBlock} />
+              <>
+                <FooterBlockItem key={footerBlock.id} {...footerBlock} />
+              </>
             ))}
           </nav>
         </div>
