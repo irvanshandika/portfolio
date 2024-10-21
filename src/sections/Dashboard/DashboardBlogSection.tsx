@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Toaster, toast } from "react-hot-toast";
 import { Edit, Trash, Plus } from "lucide-react";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Blog {
   id: string;
@@ -68,19 +69,17 @@ const BlogDashboard: React.FC = () => {
   };
 
   const handleDelete = async (blog: Blog) => {
-    if (window.confirm("Are you sure you want to delete this blog?")) {
-      try {
-        await deleteDoc(doc(db, "blogs", blog.id));
-        if (blog.thumbnail) {
-          const storageRef = ref(storage, blog.thumbnail);
-          await deleteObject(storageRef);
-        }
-        toast.success("Blog deleted successfully!");
-        fetchBlogs();
-      } catch (error) {
-        console.error("Error deleting blog: ", error);
-        toast.error("An error occurred while deleting. Please try again.");
+    try {
+      await deleteDoc(doc(db, "blogs", blog.id));
+      if (blog.thumbnail) {
+        const storageRef = ref(storage, blog.thumbnail);
+        await deleteObject(storageRef);
       }
+      toast.success("Blog deleted successfully!");
+      fetchBlogs();
+    } catch (error) {
+      console.error("Error deleting blog: ", error);
+      toast.error("An error occurred while deleting. Please try again.");
     }
   };
 
@@ -135,14 +134,32 @@ const BlogDashboard: React.FC = () => {
             <CardContent>
               <div className="line-clamp-3" dangerouslySetInnerHTML={{ __html: blog.content }} />
               <div className="mt-4 flex justify-end space-x-2">
-                <a href={`/dashboard/blogs/edit/${blog.id}`}>
-                  <Button variant="outline" size="sm">
-                    <Edit className="w-4 h-4 mr-2" /> Edit
-                  </Button>
-                </a>
-                <Button variant="destructive" size="sm" onClick={() => handleDelete(blog)}>
-                  <Trash className="w-4 h-4 mr-2" /> Delete
+                <Button variant="outline" size="sm" onClick={() => (window.location.href = `/dashboard/blogs/edit/${blog.id}`)}>
+                  <Edit className="w-4 h-4 mr-2" /> Edit
                 </Button>
+                <Dialog>
+                  <DialogTrigger>
+                    <Button variant="destructive" size="sm">
+                      <Trash className="w-4 h-4 mr-2" /> Delete
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently delete the blog titled <strong>{blog.title}</strong>.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button variant="destructive" onClick={() => handleDelete(blog)}>
+                        Yes, delete
+                      </Button>
+                      <DialogClose asChild>
+                        <Button variant="default">No, cancel</Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
