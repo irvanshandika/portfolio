@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Toaster, toast } from "react-hot-toast";
-import { Image } from "lucide-react";
+import { Image, ArrowLeft, Loader2, Moon, Sun } from "lucide-react";
 import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
@@ -21,7 +21,6 @@ interface Blog {
 
 interface EditBlogProps {
   blogId: string;
-  blogTitle: string;
 }
 
 const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
@@ -103,38 +102,77 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
     toolbar: [[{ header: [1, 2, false] }], ["bold", "italic", "underline", "strike", "blockquote", "code-block"], [{ list: "ordered" }, { list: "bullet" }], ["link", "image"], ["clean"]],
   };
 
-  const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "link", "image"];
+  const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "code-block", "list", "bullet", "link", "image"];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
   }
 
   if (!blog || !blogId) {
-    return <div>Blog not found or ID is missing</div>;
+    return <div className="text-center text-red-500">Blog not found or ID is missing</div>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-3xl">
       <Toaster position="top-right" />
-      <Card>
-        <CardHeader>
-          <CardTitle>Edit Blog</CardTitle>
+      <div className="flex justify-between items-center mb-6">
+        <Button onClick={() => (window.location.href = "/dashboard/blogs")} variant="ghost" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blogs
+        </Button>
+      </div>
+      <Card className="bg-white dark:bg-gray-800 shadow-lg">
+        <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+          <CardTitle className="text-2xl font-semibold text-gray-800 dark:text-gray-100">Edit Blog</CardTitle>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input type="text" name="title" placeholder="Blog Title" value={blog.title} onChange={handleInputChange} required />
-            <div className="flex items-center space-x-2">
-              <Input type="file" id="thumbnail" className="hidden" accept="image/*" onChange={handleThumbnailChange} />
-              <Button type="button" variant="outline" onClick={() => document.getElementById("thumbnail")?.click()}>
-                <Image className="w-4 h-4 mr-2" /> Change Thumbnail
-              </Button>
-              {thumbnailFile && <span className="text-sm text-muted-foreground">{thumbnailFile.name}</span>}
+        <CardContent className="pt-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Blog Title
+              </label>
+              <Input
+                type="text"
+                id="title"
+                name="title"
+                placeholder="Blog Title"
+                value={blog.title}
+                onChange={handleInputChange}
+                required
+                className="w-full border-gray-300 dark:border-gray-600 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:text-gray-100"
+              />
             </div>
-            {blog.thumbnail && <img src={blog.thumbnail} alt="Current thumbnail" className="w-full h-48 object-cover" />}
-            <Suspense fallback={<div>Loading editor...</div>}>
-              <ReactQuill theme="snow" value={blog.content} modules={modules} formats={formats} onChange={handleContentChange} />
-            </Suspense>
-            <Button type="submit">Update Blog</Button>
+            <div>
+              <label htmlFor="thumbnail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Thumbnail
+              </label>
+              <div className="flex items-center space-x-2">
+                <Input type="file" id="thumbnail" className="hidden" accept="image/*" onChange={handleThumbnailChange} />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById("thumbnail")?.click()}
+                  className="text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <Image className="w-4 h-4 mr-2" /> Change Thumbnail
+                </Button>
+                {thumbnailFile && <span className="text-sm text-gray-600 dark:text-gray-400">{thumbnailFile.name}</span>}
+              </div>
+              {blog.thumbnail && <img src={blog.thumbnail} alt="Current thumbnail" className="mt-4 w-full h-48 object-cover rounded-md" fetchPriority="high" loading="lazy" />}
+            </div>
+            <div>
+              <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Blog Content
+              </label>
+              <Suspense fallback={<div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-md">Loading editor...</div>}>
+                <ReactQuill theme="snow" value={blog.content} modules={modules} formats={formats} onChange={handleContentChange} className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" />
+              </Suspense>
+            </div>
+            <Button type="submit" className="w-full bg-gray-800 text-white hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 transition-colors">
+              Update Blog
+            </Button>
           </form>
         </CardContent>
       </Card>
