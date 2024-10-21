@@ -1,17 +1,43 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Sidebar from "@/components/Sidebar";
-import EditBlog from "@/sections/Dashboard/EditBlog";
+import { db } from "@/config/FirebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 
 const { id } = Astro.params;
 
-if (!id) {
-  return Astro.redirect("/404");
+async function getBlogTitle(blogId: string) {
+  try {
+    const blogRef = doc(db, "blogs", blogId);
+    const blogSnap = await getDoc(blogRef);
+    if (blogSnap.exists()) {
+      return blogSnap.data().title;
+    }
+  } catch (error) {
+    console.error("Error fetching blog title:", error);
+  }
+  return "Unknown Blog";
 }
+
+const blogTitle = id ? await getBlogTitle(id) : "Unknown Blog";
 ---
 
-<Layout title="Edit Blog | Portfolio Online">
+<Layout title={`Edit Blog: ${blogTitle} | Portfolio Online`}>
   <Sidebar client:load>
-    <EditBlog client:load blogId={id} />
+    <div id="edit-blog-container" data-blog-id={id} data-blog-title={blogTitle}></div>
   </Sidebar>
 </Layout>
+
+<script>
+  import { createElement } from "react";
+  import { createRoot } from "react-dom/client";
+  import EditBlog from "@/sections/Dashboard/EditBlog";
+
+  const container = document.getElementById("edit-blog-container");
+  if (container) {
+    const blogId = container.getAttribute("data-blog-id") || "";
+    const blogTitle = container.getAttribute("data-blog-title") || "Unknown Blog";
+    const root = createRoot(container);
+    root.render(createElement(EditBlog, { blogId, blogTitle }));
+  }
+</script>

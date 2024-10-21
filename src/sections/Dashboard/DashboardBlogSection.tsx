@@ -117,11 +117,9 @@ const BlogDashboard: React.FC = () => {
       <Toaster position="top-right" />
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-semibold">Blog Dashboard</h1>
-        <a href="/dashboard/blogs/add-blog">
-          <Button>
-            <Plus className="w-4 h-4 mr-2" /> New Blog
-          </Button>
-        </a>
+        <Button onClick={() => (window.location.href = "/dashboard/blogs/add-blog")}>
+          <Plus className="w-4 h-4 mr-2" /> New Blog
+        </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

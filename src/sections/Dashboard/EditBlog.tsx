@@ -21,6 +21,7 @@ interface Blog {
 
 interface EditBlogProps {
   blogId: string;
+  blogTitle: string;
 }
 
 const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
