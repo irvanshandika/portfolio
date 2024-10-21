@@ -2,43 +2,17 @@
 import Layout from "@/layouts/Layout.astro";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { db } from "@/config/FirebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import Blog from "@/sections/Blog";
 
-const { id } = Astro.params;
+const blogId = Astro.params.id;
 
-async function getBlogTitle(blogId: string) {
-  try {
-    const blogRef = doc(db, "blogs", blogId);
-    const blogSnap = await getDoc(blogRef);
-    if (blogSnap.exists()) {
-      return blogSnap.data().title;
-    }
-  } catch (error) {
-    console.error("Error fetching blog title:", error);
-  }
-  return "Unknown Blog";
+if (!blogId) {
+  return Astro.redirect("/404");
 }
-
-const blogTitle = id ? await getBlogTitle(id) : "Unknown Blog";
 ---
 
-<Layout title={`${blogTitle} | Portfolio Online`}>
+<Layout title="Blog | Portfolio Online">
   <Navbar currentPath={Astro.url.pathname} client:load />
-  <div id="edit-blog-container" data-blog-id={id} data-blog-title={blogTitle}></div>
+  <Blog blogId={blogId} client:load />
   <Footer client:load />
 </Layout>
-
-<script>
-  import { createElement } from "react";
-  import { createRoot } from "react-dom/client";
-  import Blog from "@/sections/Blog";
-
-  const container = document.getElementById("edit-blog-container");
-  if (container) {
-    const blogId = container.getAttribute("data-blog-id") || "";
-    const blogTitle = container.getAttribute("data-blog-title") || "Unknown Blog";
-    const root = createRoot(container);
-    root.render(createElement(Blog, { blogId, blogTitle }));
-  }
-</script>
