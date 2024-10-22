@@ -11,14 +11,12 @@ export default function AboutPage() {
       <h1 className="text-4xl font-bold mb-8 text-center">About Me</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div className="space-y-6">
-          <div className="relative w-[400px] h-[400px] mx-auto">
+          <div className="relative w-[370px] lg:w-[400px] h-[370px] lg:h-[400px] mx-auto lg:translate-x-0 translate-x-[-10px]">
             <iframe
               src="https://firebasestorage.googleapis.com/v0/b/irvans-707d8.appspot.com/o/Muhammad%20Irvan%20Shandika-resume.pdf?alt=media&token=93fdd122-e18d-4d4d-b1c1-8817dc23df05#toolbar=0"
               frameBorder="0"
-              width={400}
-              height={400}
               loading="lazy"
-              className="rounded-lg shadow-lg"></iframe>
+              className="rounded-lg shadow-lg w-[370px] lg:w-[400px] h-[370px] lg:h-[400px]"></iframe>
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg">
               <span className="text-white text-6xl font-bold opacity-50 transform -rotate-45 select-none">Review</span>
             </div>
