@@ -2657,9 +2657,25 @@
         })({ features: [me, y, _, _e, Pe, P, U, ct, lt, ke, at], loaderType: "spa" });
       })();
   })();
-
+  // Batas
   window.NREUM || (NREUM = {});
-  NREUM.init = { distributed_tracing: { enabled: true }, privacy: { cookies_enabled: true }, ajax: { deny_list: ["bam.nr-data.net"] } };
+  NREUM.init = {
+    session_replay: {
+      enabled: true,
+      block_selector: "",
+      mask_text_selector: "*",
+      sampling_rate: 10.0,
+      error_sampling_rate: 100.0,
+      mask_all_inputs: true,
+      collect_fonts: true,
+      inline_images: false,
+      inline_stylesheet: true,
+      mask_input_options: {},
+    },
+    distributed_tracing: { enabled: true, exclude_newrelic_header: true, cors_use_newrelic_header: true, cors_use_tracecontext_headers: true, allowed_origins: ["https://irvans.my.id"] },
+    privacy: { cookies_enabled: true },
+    ajax: { deny_list: ["bam.nr-data.net", "irvans.my.id"] },
+  };
 
   NREUM.loader_config = { accountID: "4477971", trustKey: "4477971", agentID: "601507710", licenseKey: "NRJS-431f8412c51216674ac", applicationID: "601507710" };
   NREUM.info = { beacon: "bam.nr-data.net", errorBeacon: "bam.nr-data.net", licenseKey: "NRJS-431f8412c51216674ac", applicationID: "601507710", sa: 1 }; /*! For license information please see nr-loader-spa-1.269.0.min.js.LICENSE.txt */
