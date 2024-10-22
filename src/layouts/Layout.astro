@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 import "@/styles/global.css";
+import NewRelic from "./NewRelic.astro";
 ---
 
 <script is:inline>
@@ -68,7 +69,7 @@ import "@/styles/global.css";
 
   gtag("config", "G-QWFK1HLP35");
 </script>
-<script src="https://apis.google.com/js/platform.js"></script>
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -103,11 +104,13 @@ import "@/styles/global.css";
   </head>
   <body class="font-poppins">
     <slot />
+    <NewRelic />
     <noscript>
       <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=6353754&fmt=gif" />
     </noscript>
     <noscript><img src="https://queue.simpleanalyticscdn.com/noscript.gif" alt="" referrerpolicy="no-referrer-when-downgrade" /></noscript>
     <script async defer src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QWFK1HLP35"></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
   </body>
 </html>

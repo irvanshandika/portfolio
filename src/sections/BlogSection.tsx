@@ -198,14 +198,6 @@ const BlogPage: React.FC = () => {
         </div>
 
         {!loading && blogs.length === 0 && <div className="text-center mt-8 text-gray-500 dark:text-gray-400">No blogs found. Try a different search term.</div>}
-
-        {/* {!loading && lastVisible && blogs.length > 0 && (
-          <div className="text-center mt-8">
-            <Button onClick={loadMoreBlogs} className="px-5 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-blue-600 dark:text-gray-300">
-              Load More
-            </Button>
-          </div>
-        )} */}
       </div>
     </section>
   );
