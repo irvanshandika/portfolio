@@ -100,3 +100,70 @@
 .dark .ql-editor.ql-blank::before {
   color: #9ca3af !important;
 }
+
+/* Styling untuk React Quill content */
+.ql-editor {
+  @apply text-base;
+}
+
+.ql-editor h1 {
+  @apply text-4xl font-bold mb-4;
+}
+
+.ql-editor h2 {
+  @apply text-3xl font-bold mb-3;
+}
+
+.ql-editor h3 {
+  @apply text-2xl font-bold mb-2;
+}
+
+.ql-editor p {
+  @apply mb-4;
+}
+
+.ql-editor ul {
+  @apply list-disc ml-4 mb-4;
+}
+
+.ql-editor ol {
+  @apply list-decimal ml-4 mb-4;
+}
+
+.ql-editor li {
+  @apply mb-2;
+}
+
+.ql-editor blockquote {
+  @apply border-l-4 border-gray-300 dark:border-gray-700 pl-4 my-4 italic;
+}
+
+.ql-editor img {
+  @apply max-w-full h-auto my-4 rounded-lg;
+}
+
+.ql-editor pre {
+  @apply bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-4 overflow-x-auto;
+}
+
+.ql-editor code {
+  @apply font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded;
+}
+
+.ql-editor a {
+  @apply text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 underline;
+}
+
+/* Tambahan untuk dark mode */
+.dark .ql-editor {
+  color: var(--foreground);
+}
+
+.dark .ql-editor h1,
+.dark .ql-editor h2,
+.dark .ql-editor h3,
+.dark .ql-editor h4,
+.dark .ql-editor h5,
+.dark .ql-editor h6 {
+  color: var(--foreground);
+}

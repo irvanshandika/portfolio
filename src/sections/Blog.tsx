@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Calendar, User } from "lucide-react";
+import "react-quill/dist/quill.snow.css";
 
 interface Blog {
   id: string;
@@ -78,10 +79,9 @@ const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
     }
   };
 
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "Unknown date";
-    const date = timestamp.toDate();
-    return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  const truncateContent = (content: string, maxLength: number) => {
+    if (content.length <= maxLength) return content;
+    return content.substr(0, maxLength) + "...";
   };
 
   const formatTimestamp = (timestamp: any) => {
@@ -160,7 +160,18 @@ const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
             </CardHeader>
             <CardContent>
               {blog.thumbnail && <img src={blog.thumbnail} alt={blog.title} className="w-full max-h-96 object-cover mb-6 rounded-md" fetchPriority="high" />}
-              <div className="prose max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: blog.content }} />
+              <div
+                className="prose max-w-none dark:prose-invert ql-editor !p-0"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+                style={
+                  {
+                    "--tw-prose-headings": "var(--foreground)",
+                    "--tw-prose-body": "var(--foreground)",
+                    "--tw-prose-bold": "var(--foreground)",
+                    "--tw-prose-links": "var(--foreground)",
+                  } as React.CSSProperties
+                }
+              />
             </CardContent>
           </Card>
         </div>
