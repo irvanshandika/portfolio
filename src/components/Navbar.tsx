@@ -56,17 +56,19 @@ const Navbar = ({ currentPath }: { currentPath: string }) => {
             </ul>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4  lg:min-w-max mt-10 lg:mt-0">
               <LoginModal />
-              <ModeToggle />
+              <div className="lg:block hidden">
+                <ModeToggle />
+              </div>
             </div>
           </div>
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center lg:hidden space-x-5">
             <button onClick={toggleNavbar} aria-label="toggle navbar" className="outline-none border-l border-l-indigo-100 dark:border-l-gray-800 pl-3 relative py-3">
               <span
                 aria-hidden={true}
                 className={`
                   flex h-0.5 w-6 rounded bg-gray-800 dark:bg-gray-300 transition duration-300
                   ${navIsOpened ? "rotate-45 translate-y-[.324rem]" : ""}
-                `}></span>
+                  `}></span>
               <span
                 aria-hidden={true}
                 className={`
@@ -75,6 +77,7 @@ const Navbar = ({ currentPath }: { currentPath: string }) => {
                 `}
               />
             </button>
+            <ModeToggle />
           </div>
         </nav>
       </header>

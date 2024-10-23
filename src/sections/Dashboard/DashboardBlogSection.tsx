@@ -19,6 +19,7 @@ interface Blog {
   authorId: string;
   authorName: string;
   photoURL?: string;
+  tags: string[];
 }
 
 const useAdminCheck = () => {
@@ -133,6 +134,13 @@ const BlogDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="line-clamp-3" dangerouslySetInnerHTML={{ __html: blog.content }} />
+              <div className="mt-2">
+                {blog.tags.map((tag) => (
+                  <span key={tag} className="inline-block bg-gray-200 rounded-full text-sm px-2 py-1 mr-2 dark:bg-gray-900">
+                    {tag}
+                  </span>
+                ))}
+              </div>
               <div className="mt-4 flex justify-end space-x-2">
                 <Button variant="outline" size="sm" onClick={() => (window.location.href = `/dashboard/blogs/edit/${blog.id}`)}>
                   <Edit className="w-4 h-4 mr-2" /> Edit

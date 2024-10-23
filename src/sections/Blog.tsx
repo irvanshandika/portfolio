@@ -13,6 +13,7 @@ interface Blog {
   thumbnail: string;
   createdAt: any;
   authorName: string;
+  tags: string[];
 }
 
 interface ArchiveItem {
@@ -184,6 +185,22 @@ const BlogDetailPage: React.FC<BlogProps> = ({ blogId }) => {
                   </ul>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">Tags</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="flex space-x-4">
+                {blog.tags.map((tag) => (
+                  <li key={tag}>
+                    <div className="text-muted-foreground font-bold">{tag}</div>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </div>

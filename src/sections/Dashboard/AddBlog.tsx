@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Toaster, toast } from "react-hot-toast";
-import { Image, ArrowLeft, Loader2 } from "lucide-react";
+import { Image, ArrowLeft, Loader2, X } from "lucide-react";
 import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
@@ -16,6 +16,7 @@ interface NewBlog {
   title: string;
   content: string;
   thumbnail: string;
+  tags: string[];
 }
 
 const AddBlogPage: React.FC = () => {
@@ -24,10 +25,12 @@ const AddBlogPage: React.FC = () => {
     title: "",
     content: "",
     thumbnail: "",
+    tags: [],
   });
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [tagInput, setTagInput] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,6 +45,32 @@ const AddBlogPage: React.FC = () => {
     if (e.target.files && e.target.files[0]) {
       setThumbnailFile(e.target.files[0]);
     }
+  };
+
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(e.target.value);
+  };
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const addTag = () => {
+    const trimmedTag = tagInput.trim();
+    if (trimmedTag && !newBlog.tags.includes(trimmedTag)) {
+      setNewBlog((prev) => ({ ...prev, tags: [...prev.tags, trimmedTag] }));
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setNewBlog((prev) => ({
+      ...prev,
+      tags: prev.tags.filter((tag) => tag !== tagToRemove),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -128,6 +157,35 @@ const AddBlogPage: React.FC = () => {
                 {thumbnailFile && <span className="text-sm text-gray-600 dark:text-gray-400">{thumbnailFile.name}</span>}
               </div>
               {thumbnailFile && <img src={URL.createObjectURL(thumbnailFile)} alt="Thumbnail preview" className="mt-4 max-w-xs rounded-md shadow-md" fetchPriority="high" loading="lazy" />}
+            </div>
+            <div>
+              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Tags
+              </label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {newBlog.tags.map((tag, index) => (
+                  <span key={index} className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md text-sm flex items-center">
+                    {tag}
+                    <button type="button" onClick={() => removeTag(tag)} className="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex items-center">
+                <Input
+                  type="text"
+                  id="tags"
+                  placeholder="Add tags (comma-separated)"
+                  value={tagInput}
+                  onChange={handleTagInputChange}
+                  onKeyDown={handleTagInputKeyDown}
+                  className="w-full border-gray-300 dark:border-gray-600 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                />
+                <Button type="button" onClick={addTag} className="ml-2">
+                  Add Tag
+                </Button>
+              </div>
             </div>
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

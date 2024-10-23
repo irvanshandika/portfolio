@@ -14,6 +14,7 @@ interface Blog {
   createdAt: any;
   authorName: string;
   photoURL?: string;
+  tags: string[];
 }
 
 const BlogPage: React.FC = () => {
@@ -35,7 +36,16 @@ const BlogPage: React.FC = () => {
       let blogQuery = query(collection(db, "blogs"), orderBy("createdAt", "desc"), limit(blogsPerPage));
 
       if (search) {
-        blogQuery = query(collection(db, "blogs"), where("title", ">=", search), where("title", "<=", search + "\uf8ff"), orderBy("title"), limit(blogsPerPage));
+        blogQuery = query(
+          collection(db, "blogs"),
+          where("title", ">=", search),
+          where("title", "<=", search + "\uf8ff"),
+          where("tags", "<=", search),
+          where("tags", "<=", search + "\uf8ff"),
+          orderBy("title"),
+          orderBy("tags"),
+          limit(blogsPerPage)
+        );
       }
 
       const querySnapshot = await getDocs(blogQuery);
@@ -84,12 +94,6 @@ const BlogPage: React.FC = () => {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetchBlogs(searchTerm);
-  };
-
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "Unknown date";
-    const date = timestamp.toDate();
-    return date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
   };
 
   const truncateContent = (content: string, maxLength: number) => {
@@ -186,6 +190,13 @@ const BlogPage: React.FC = () => {
                     <span className="text-blue-600 dark:text-blue-400 text-sm">{formatTimestamp(blog.createdAt)}</span>
                     <h1 className="text-gray-900 dark:text-white text-xl font-semibold">{blog.title}</h1>
                     <span className="text-gray-700 dark:text-gray-300 line-clamp-2" dangerouslySetInnerHTML={{ __html: truncateContent(blog.content, 150) }} />
+                    <div className="flex items-center gap-x-2">
+                      {blog.tags.map((tag) => (
+                        <span key={tag} className="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-white text-xs rounded-md">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                     <a href={`/blogs/${blog.id}`} className="flex items-center gap-x-2 text-blue-600 dark:text-blue-400">
                       Read more
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">

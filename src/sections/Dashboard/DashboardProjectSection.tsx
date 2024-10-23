@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, X, Upload, Github, ExternalLink, Edit, Trash } from "lucide-react";
+import { X, Github, ExternalLink, Edit, Trash } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { db, storage, auth } from "@/config/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
