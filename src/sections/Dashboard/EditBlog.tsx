@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Toaster, toast } from "react-hot-toast";
-import { Image, ArrowLeft, Loader2 } from "lucide-react";
+import { Image, ArrowLeft, Loader2, X } from "lucide-react";
 import "react-quill/dist/quill.snow.css";
 
 const ReactQuill = React.lazy(() => import("react-quill"));
@@ -17,6 +17,7 @@ interface Blog {
   title: string;
   content: string;
   thumbnail: string;
+  tags: string[];
 }
 
 interface EditBlogProps {
@@ -29,6 +30,7 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
     if (blogId) {
@@ -73,6 +75,36 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
     }
   };
 
+  const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTagInput(e.target.value);
+  };
+
+  const handleTagInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const addTag = () => {
+    const trimmedTag = tagInput.trim();
+    if (trimmedTag && blog && !blog.tags.includes(trimmedTag)) {
+      setBlog((prev) => (prev ? { ...prev, tags: [...prev.tags, trimmedTag] } : null));
+      setTagInput("");
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    setBlog((prev) =>
+      prev
+        ? {
+            ...prev,
+            tags: prev.tags.filter((tag) => tag !== tagToRemove),
+          }
+        : null
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user || !blog) return;
@@ -100,10 +132,41 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
   };
 
   const modules = {
-    toolbar: [[{ header: [1, 2, false] }], ["bold", "italic", "underline", "strike", "blockquote", "code-block"], [{ list: "ordered" }, { list: "bullet" }], ["link", "image"], ["clean"]],
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
+      [{ color: [] }, { background: [] }],
+      [{ list: "ordered" }, { list: "bullet" }, {list: "check"}],
+      ["link", "image", "video"],
+      [{ align: ["center", "right", "justify"] }],
+      [{ script: "sub" }, { script: "super" }],
+      [{ direction: "rtl" }],
+      ["clean"],
+    ],
   };
 
-  const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "code-block", "list", "bullet", "link", "image"];
+  const formats = [
+    "font", 
+    "header", 
+    "bold", 
+    "italic", 
+    "underline", 
+    "strike", 
+    "blockquote", 
+    "code-block", 
+    "list", 
+    "bullet", 
+    "link", 
+    "image", 
+    "video", 
+    "code-block", 
+    "align", 
+    "color", 
+    "background", 
+    "script", 
+    "direction"
+  ];
 
   if (loading) {
     return (
@@ -162,6 +225,35 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
                 {thumbnailFile && <span className="text-sm text-gray-600 dark:text-gray-400">{thumbnailFile.name}</span>}
               </div>
               {blog.thumbnail && <img src={blog.thumbnail} alt="Current thumbnail" className="mt-4 w-full h-48 object-cover rounded-md" fetchPriority="high" loading="lazy" />}
+            </div>
+            <div>
+              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Tags
+              </label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {blog.tags.map((tag, index) => (
+                  <span key={index} className="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md text-sm flex items-center">
+                    {tag}
+                    <button type="button" onClick={() => removeTag(tag)} className="ml-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                      <X className="w-4 h-4" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex items-center">
+                <Input
+                  type="text"
+                  id="tags"
+                  placeholder="Add tags (comma-separated)"
+                  value={tagInput}
+                  onChange={handleTagInputChange}
+                  onKeyDown={handleTagInputKeyDown}
+                  className="w-full border-gray-300 dark:border-gray-600 focus:ring-gray-500 focus:border-gray-500 dark:bg-gray-700 dark:text-gray-100"
+                />
+                <Button type="button" onClick={addTag} className="ml-2">
+                  Add Tag
+                </Button>
+              </div>
             </div>
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">

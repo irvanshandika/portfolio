@@ -107,10 +107,41 @@ const AddBlogPage: React.FC = () => {
   };
 
   const modules = {
-    toolbar: [[{ header: [1, 2, false] }], ["bold", "italic", "underline", "strike", "blockquote", "code-block"], [{ list: "ordered" }, { list: "bullet" }], ["link", "image"], ["clean"]],
+    toolbar: [
+      [{ font: [] }],
+      [{ header: [1, 2, false] }],
+      ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
+      [{ color: [] }, { background: [] }],
+      [{ list: "ordered" }, { list: "bullet" }, {list: "check"}],
+      ["link", "image", "video"],
+      [{ align: ["center", "right", "justify"] }],
+      [{ script: "sub" }, { script: "super" }],
+      [{ direction: "rtl" }],
+      ["clean"],
+    ],
   };
 
-  const formats = ["header", "bold", "italic", "underline", "strike", "blockquote", "code-block", "list", "bullet", "link", "image"];
+  const formats = [
+    "font", 
+    "header", 
+    "bold", 
+    "italic", 
+    "underline", 
+    "strike", 
+    "blockquote", 
+    "code-block", 
+    "list", 
+    "bullet", 
+    "link", 
+    "image", 
+    "video", 
+    "code-block", 
+    "align", 
+    "color", 
+    "background", 
+    "script", 
+    "direction"
+  ];
 
   return (
     <div className={`container mx-auto px-4 py-8 max-w-3xl ${darkMode ? "dark" : ""}`}>
