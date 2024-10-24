@@ -1,0 +1,63 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import EditProject from "@/sections/Dashboard/projects/EditProject";
+import Sidebar from "@/components/Sidebar";
+import { db } from "@/config/FirebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+
+interface Project {
+  id: string;
+  image: string;
+  title: string;
+  description: string;
+  fullDescription: string;
+  tags: string[];
+  githubLink: string;
+  liveLink: string;
+}
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect("/dashboard/projects");
+}
+
+let projectTitle = "Edit Project";
+let projectData: Project | null = null;
+
+try {
+  const projectRef = doc(db, "projects_db", id);
+  const projectDoc = await getDoc(projectRef);
+  
+  if (projectDoc.exists()) {
+    const data = projectDoc.data();
+    projectData = {
+      id: id,
+      image: data.image || "",
+      title: data.title || "",
+      description: data.description || "",
+      fullDescription: data.fullDescription || "",
+      tags: data.tags || [],
+      githubLink: data.githubLink || "",
+      liveLink: data.liveLink || "",
+    } as Project;
+    projectTitle = `Edit Project: ${projectData.title}`;
+  } else {
+    return Astro.redirect("/dashboard/projects");
+  }
+} catch (error) {
+  console.error("Error fetching project:", error);
+  return Astro.redirect("/dashboard/projects");
+}
+---
+
+<Layout title={projectTitle}>
+  <Sidebar>
+    <div class="container mx-auto px-4 py-8">
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold">{projectTitle}</h1>
+      </div>
+      <EditProject client:load projectId={id} initialData={projectData} />
+    </div>
+  </Sidebar>
+</Layout>

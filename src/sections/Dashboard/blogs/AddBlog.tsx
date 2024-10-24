@@ -29,7 +29,6 @@ const AddBlogPage: React.FC = () => {
   });
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [tagInput, setTagInput] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,7 +146,7 @@ const AddBlogPage: React.FC = () => {
   ];
 
   return (
-    <div className={`container mx-auto px-4 py-8 max-w-3xl ${darkMode ? "dark" : ""}`}>
+    <div className="container mx-auto px-4 py-8 max-w-3xl">
       <Toaster position="top-right" />
       <div className="flex justify-between items-center mb-6">
         <Button onClick={() => (window.location.href = "/dashboard/blogs")} variant="ghost" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100">

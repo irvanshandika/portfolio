@@ -3,11 +3,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowUpDown, Search, Eye, Trash2 } from "lucide-react";
+import { ArrowUpDown, Search, Eye, Trash2, TriangleAlertIcon } from "lucide-react";
 import { collection, query, getDocs, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { Toaster, toast } from "react-hot-toast";
 import { db, auth } from "@/config/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface Contact {
   id: string;
@@ -92,15 +93,13 @@ const ContactDashboard: React.FC = () => {
   };
 
   const handleDeleteMessage = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this message?")) {
-      try {
-        await deleteDoc(doc(db, "messages_db", id));
-        toast.success("Message deleted successfully");
-        fetchContacts();
-      } catch (error) {
-        console.error("Error deleting document: ", error);
-        toast.error("Failed to delete message");
-      }
+    try {
+      await deleteDoc(doc(db, "messages_db", id));
+      toast.success("Message deleted successfully");
+      fetchContacts();
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+      toast.error("Failed to delete message");
     }
   };
 
@@ -166,9 +165,28 @@ const ContactDashboard: React.FC = () => {
                     <Button variant="ghost" onClick={() => handleViewMessage(contact.id)}>
                       <Eye className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" onClick={() => handleDeleteMessage(contact.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger>
+                        <Button variant="ghost">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <div className="flex">
+                            <TriangleAlertIcon className="h-6 w-6 text-red-500" />
+                            <h2 className="text-lg font-semibold ml-2">Delete Message</h2>
+                          </div>
+                        </AlertDialogHeader>
+                        <AlertDialogDescription>Are you sure you want to delete this message? This action cannot be undone.</AlertDialogDescription>
+                        <AlertDialogFooter>
+                          <Button variant="destructive" onClick={() => handleDeleteMessage(contact.id)}>
+                            Delete
+                          </Button>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </TableCell>
                 </TableRow>
               ))}

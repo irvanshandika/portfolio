@@ -31,7 +31,7 @@ const blogTitle = id ? await getBlogTitle(id) : "Unknown Blog";
 <script>
   import { createElement } from "react";
   import { createRoot } from "react-dom/client";
-  import EditBlog from "@/sections/Dashboard/EditBlog";
+  import EditBlog from "@/sections/Dashboard/blogs/EditBlog";
 
   const container = document.getElementById("edit-blog-container");
   if (container) {
