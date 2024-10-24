@@ -84,6 +84,11 @@ const BlogDashboard: React.FC = () => {
     }
   };
 
+  const truncateContent = (content: string, maxLength: number) => {
+    if (content.length <= maxLength) return content;
+    return content.substr(0, maxLength) + "...";
+  };
+
   const formatTimestamp = (timestamp: any) => {
     if (!timestamp) return "0 seconds";
     const now = new Date();
@@ -133,7 +138,7 @@ const BlogDashboard: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="line-clamp-3" dangerouslySetInnerHTML={{ __html: blog.content }} />
+              <div className="line-clamp-3" dangerouslySetInnerHTML={{ __html: truncateContent(blog.content, 150) }} />
               <div className="mt-2">
                 {blog.tags.map((tag) => (
                   <span key={tag} className="inline-block bg-gray-200 rounded-full text-sm px-2 py-1 mr-2 dark:bg-gray-900">

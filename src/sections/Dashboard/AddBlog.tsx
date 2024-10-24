@@ -110,10 +110,11 @@ const AddBlogPage: React.FC = () => {
     toolbar: [
       [{ font: [] }],
       [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
+      ["bold", "italic", "underline", "strike", "blockquote"],
       [{ color: [] }, { background: [] }],
+      ["code", "code-block"],
       [{ list: "ordered" }, { list: "bullet" }, {list: "check"}],
-      ["link", "image", "video"],
+      ["link", "image", "video", "formula"],
       [{ align: ["center", "right", "justify"] }],
       [{ script: "sub" }, { script: "super" }],
       [{ direction: "rtl" }],
@@ -140,7 +141,9 @@ const AddBlogPage: React.FC = () => {
     "color", 
     "background", 
     "script", 
-    "direction"
+    "direction",
+    "formula",
+    "code"
   ];
 
   return (

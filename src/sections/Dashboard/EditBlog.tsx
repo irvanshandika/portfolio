@@ -135,10 +135,11 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
     toolbar: [
       [{ font: [] }],
       [{ header: [1, 2, false] }],
-      ["bold", "italic", "underline", "strike", "blockquote", "code-block"],
+      ["bold", "italic", "underline", "strike", "blockquote"],
       [{ color: [] }, { background: [] }],
+      ["code", "code-block"],
       [{ list: "ordered" }, { list: "bullet" }, {list: "check"}],
-      ["link", "image", "video"],
+      ["link", "image", "video", "formula"],
       [{ align: ["center", "right", "justify"] }],
       [{ script: "sub" }, { script: "super" }],
       [{ direction: "rtl" }],
@@ -165,7 +166,9 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
     "color", 
     "background", 
     "script", 
-    "direction"
+    "direction",
+    "formula",
+    "code"
   ];
 
   if (loading) {
@@ -260,7 +263,14 @@ const EditBlog: React.FC<EditBlogProps> = ({ blogId }) => {
                 Blog Content
               </label>
               <Suspense fallback={<div className="h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-md">Loading editor...</div>}>
-                <ReactQuill theme="snow" value={blog.content} modules={modules} formats={formats} onChange={handleContentChange} className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md" />
+                <ReactQuill
+                  theme="snow"
+                  value={blog.content}
+                  onChange={handleContentChange}
+                  modules={modules}
+                  formats={formats}
+                  className="bg-white dark:bg-gray-800 dark:text-gray-100 rounded-md shadow-md"
+                />
               </Suspense>
             </div>
             <Button type="submit" className="w-full bg-gray-800 text-white hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-500 transition-colors">
