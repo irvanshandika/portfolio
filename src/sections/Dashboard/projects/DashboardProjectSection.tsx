@@ -18,6 +18,7 @@ interface Project {
   tags: string[];
   githubLink: string;
   liveLink: string;
+  createdAt: number;
 }
 
 const useAdminCheck = () => {
@@ -65,9 +66,11 @@ const ProjectList: React.FC = () => {
         ({
           id: doc.id,
           ...doc.data(),
+          createdAt: doc.data().createdAt?.toMillis() || Date.now(),
         }) as Project
     );
-    setProjects(projectsList);
+    const sortedProjects = projectsList.sort((a, b) => b.createdAt - a.createdAt);
+    setProjects(sortedProjects);
   };
 
   const handleDeleteConfirm = async () => {

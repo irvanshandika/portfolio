@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { X } from "lucide-react";
 import { db, storage, auth } from "@/config/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -19,6 +19,7 @@ interface Project {
   tags: string[];
   githubLink: string;
   liveLink: string;
+  createdAt?: any;
 }
 
 const useAdminCheck = () => {
@@ -104,11 +105,12 @@ const AddProject: React.FC = () => {
       const projectData = {
         ...currentProject,
         image: imageUrl,
+        createdAt: serverTimestamp(),
       };
 
+      toast.success("Project added successfully");
       await addDoc(collection(db, "projects_db"), projectData);
       window.location.href = "/dashboard/projects";
-      toast.success("Project added successfully");
     } catch (error) {
       console.error("Error saving project:", error);
       toast.error("Failed to save project");

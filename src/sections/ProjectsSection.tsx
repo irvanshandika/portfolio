@@ -17,6 +17,7 @@ interface Project {
   githubLink: string;
   liveLink: string;
   fullDescription: string;
+  createdAt: number;
 }
 
 export default function ProjectShowcase() {
@@ -29,8 +30,16 @@ export default function ProjectShowcase() {
       try {
         const projectsCollection = collection(db, "projects_db");
         const projectsSnapshot = await getDocs(projectsCollection);
-        const projectsList = projectsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as Project);
-        setProjects(projectsList);
+        const projectsList = projectsSnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+              createdAt: doc.data().createdAt?.toMillis() || Date.now(),
+            }) as Project
+        );
+        const sortedProjects = projectsList.sort((a, b) => b.createdAt - a.createdAt);
+        setProjects(sortedProjects);
       } catch (error) {
         console.error("Error fetching projects:", error);
       } finally {

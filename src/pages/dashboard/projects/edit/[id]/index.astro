@@ -28,7 +28,7 @@ let projectData: Project | null = null;
 try {
   const projectRef = doc(db, "projects_db", id);
   const projectDoc = await getDoc(projectRef);
-  
+
   if (projectDoc.exists()) {
     const data = projectDoc.data();
     projectData = {
@@ -51,13 +51,8 @@ try {
 }
 ---
 
-<Layout title={projectTitle}>
+<Layout title={`${projectTitle} | Portfolio Online`}>
   <Sidebar>
-    <div class="container mx-auto px-4 py-8">
-      <div class="flex justify-between items-center mb-8">
-        <h1 class="text-4xl font-bold">{projectTitle}</h1>
-      </div>
-      <EditProject client:load projectId={id} initialData={projectData} />
-    </div>
+    <EditProject client:load projectId={id} initialData={projectData} />
   </Sidebar>
 </Layout>
