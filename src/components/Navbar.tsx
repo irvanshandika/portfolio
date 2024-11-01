@@ -56,9 +56,7 @@ const Navbar = ({ currentPath }: { currentPath: string }) => {
             </ul>
             <div className="flex flex-col sm:flex-row sm:items-center gap-4  lg:min-w-max mt-10 lg:mt-0">
               <LoginModal />
-              <div className="lg:block hidden">
-                <ModeToggle />
-              </div>
+              <ModeToggle />
             </div>
           </div>
           <div className="flex items-center lg:hidden space-x-5">
@@ -77,7 +75,6 @@ const Navbar = ({ currentPath }: { currentPath: string }) => {
                 `}
               />
             </button>
-            <ModeToggle />
           </div>
         </nav>
       </header>
