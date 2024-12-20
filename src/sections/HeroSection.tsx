@@ -17,7 +17,7 @@ export default function HeroSection() {
           </div>
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">Muhammad Irvan Shandika</h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">Web Developer | UI/UX Designer | Promp Engineer</p>
+            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">Web Developer</p>
           </div>
           <p className="mx-auto max-w-[700px] text-muted-foreground md:text-lg">
             I am a freelancer in the field of website development, both in terms of frontend and backend. For now I am still learning about the backend. I also have experience in UI/UX development and promp engineer.
